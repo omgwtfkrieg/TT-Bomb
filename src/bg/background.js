@@ -6,12 +6,12 @@
 
 
 //example of using a message handler from the inject scripts
-chrome.extension.onMessage.addListener(
+/* chrome.extension.onMessage.addListener(
   function(request, sender, sendResponse) {
   	chrome.pageAction.show(sender.tab.id);
     sendResponse();
 
-  });
+  }); */
   
 // Show page action icon in omnibar.
 function onWebNav(details) {
@@ -28,4 +28,10 @@ var filter = {
 chrome.webNavigation.onCommitted.addListener(onWebNav, filter);
 chrome.webNavigation.onHistoryStateUpdated.addListener(onWebNav, filter);
 
+
+
+/* chrome.storage.sync.get('badgeID_OP', function (result) {
+console.log('getting Badge from the Option page ' + items.badgeID_OP);
+send_badgeID_OP=items.badgeID_OP;
+}); */
 
