@@ -1,10 +1,10 @@
 // Saves options to chrome.storage
 function save_options() {
-  var color = document.getElementById('color').value;
+  var punchtype_OP = document.getElementById('punchtype_OP').value;
   var likesColor = document.getElementById('like').checked;
   var badgeID_OP = document.getElementById('badgeID_OP').value;
   chrome.storage.sync.set({
-    favoriteColor: color,
+    favoriteColor: punchtype_OP,
     likesColor: likesColor,
 	badgeID_OP: badgeID_OP
   }, function() {
@@ -23,10 +23,10 @@ function restore_options() {
   // Use default value color = 'red' and likesColor = true.
   chrome.storage.sync.get({
 	badgeID_OP: '12345',
-    favoriteColor: 'red',
+    favoriteColor: 'FN1',
     likesColor: true
   }, function(items) {
-    document.getElementById('color').value = items.favoriteColor;
+    document.getElementById('punchtype_OP').value = items.favoriteColor;
     document.getElementById('like').checked = items.likesColor;
     document.getElementById('badgeID_OP').value = items.badgeID_OP;
 	
