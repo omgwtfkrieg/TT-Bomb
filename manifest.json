@@ -1,0 +1,46 @@
+{
+  "name": "TT-BOMB : for the lazy cunts",
+  "version": "0.0.1",
+  "manifest_version": 2,
+  "description": "Automated TimeTrak punch handler",
+  "homepage_url": "http://trololololololololololo.com/",
+  "icons": {
+    "16": "icons/icon16.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  },
+  "default_locale": "en",
+  "background": {
+    "scripts": [
+      "src/bg/background.js"
+    ],
+    "persistent": false
+  },
+  "options_page": "src/options_custom/index.html",
+  "page_action": {
+    "default_icon": "icons/icon19.png",
+    "default_title": "page action demo",
+    "default_popup": "src/page_action/page_action.html"
+  },
+  "permissions": [
+	"identity",
+    "webNavigation",
+    "notifications",
+    "tabs",
+	"storage",
+    "https://*/* ",
+    "http://km2.timetrak.com.com/*"
+  ],
+  "content_scripts": [
+    {
+      "matches": [
+        "http://km2.timetrak.com:85/*",
+        "http://12.168.15.20:85/*",
+		"http://75.144.77.177:85/*"
+      ],
+      "js": [
+        "js/jquery/jquery.js", "src/inject/inject.js"
+      ]
+    }
+  ]
+}
