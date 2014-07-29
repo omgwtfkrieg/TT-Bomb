@@ -1,25 +1,83 @@
 <!DOCTYPE html>
 <html>
-<head><title>My Test Extension Options</title></head>
+<head>
+    <meta charset="UTF-8">
+    <title>User query options</title>
+    <!--<script src="/js/jquery/jquery.js" type="text/javascript"></script>-->
+	<script src="./jquery.min.js" type="text/javascript"></script>
+    <script src="./option_page.js" type="text/javascript"></script>
+	<script src="./bootstrap.js" type="text/javascript"></script>
+	<script type="text/javascript" src="./bootstrap-timepicker.js"></script>
+	<link rel="stylesheet" href="./css/bootstrap.css">
+	<link rel="stylesheet" href="./css/bootstrap-timepicker.min.css" />
+	<!--<link rel="stylesheet" href="/css/bootstrap-theme.css">-->
+
+
 <body>
-Timetrak ID:
-<input type="text" id="badgeID_OP"><br>
-Punch type:
-<select id="punchtype_OP">
- <option value="FN1">In for the day</option>
- <option value="FN2">Back from lunch</option>
- <option value="FN3">Out</option>
- <option value="FN5">End of the day</option>
-</select>
-
-<label>
-  <input type="checkbox" id="like">
-  I like colors.
-</label>
-
-<div id="status"></div>
-<button id="save">Save</button>
-
-<script src="option_page.js"></script>
+ <div class="container">
+    <div class="row clearfix">
+		<div class="col-md-12 column jumbotron">
+			<div class="col-md-6">
+				<div class="">
+					<div class="container">
+						<h1>TT Bomb!</h1>
+							<p>Automated TimeTrak punch handler for the lazy</p><img src="Bob-Omb.png" alt="Bob-Omb" >
+							<p><a class="btn btn-primary btn-lg" role="button">BOOM!</a></p>
+					</div>
+				</div>
+			</div>
+			<div class="col-md-6">
+				<table class="table table-bordered table-hover table-condensed" id="tab_logic">
+					<thead>
+						<tr >
+							<th class="text-center">
+								#
+							</th>
+							<th class="text-center">
+								Badge ID
+							</th>
+							<th class="text-center">
+								Schedule
+							</th>
+							<th class="text-center">
+								Punch Type
+							</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr id='addr0' class="form-group">
+							<td>
+							1
+							</td>
+							<td class="col-lg-4">
+							<input type="text" name='name0'  placeholder='Badge ID' class="form-control" maxlength="5"/>
+							</td>
+							<td>
+								<div class="input-group bootstrap-timepicker ">
+									<input id="" class="form-control col-lg-2 timepicker1" type="text" >
+									<span class="input-group-addon"><i class="glyphicon glyphicon-time"></i></span>
+								</div>
+							</td>
+							<td class="col-lg-4">
+							
+							<select name="punch_select0" class="form-control punch_type_OP">
+								<option value="FN1">In for the day</option>
+								<option value="FN2">Back from lunch</option>
+								<option value="FN3">Out</option>
+								<option value="FN5">End of the day</option>
+							</select>
+							</td>
+						</tr>
+						<tr id='addr1'></tr>
+						
+					</tbody>
+				</table>
+				<a id="add_row" class="btn btn-default pull-left">Add Row</a><a id='delete_row' class="pull-right btn btn-default">Delete Row</a><a id="checkstorage" class="btn btn-default pull-left">Checkstorage</a>
+			</div>
+		
+		
+			
+		</div>
+	</div>
+</div>
 </body>
-</html>
