@@ -1,3 +1,95 @@
+$(function() {
+	$('.timepicker1').timepicker();
+});
+
+jQuery(function($){
+
+  var page = $('#options-page'); 
+  var newQuery = page.find('.new');
+  var tpl = page.find('.template');
+  tpl.hide();
+  var id = 0;
+
+  function createQuery(id){
+    if ($('#row-' + id).length > 0){
+      return $('#row-' + id);
+    }
+    var c = tpl.clone();
+    c.removeClass('template');
+    tpl.parent().append(c);
+    c.show();
+    c.attr('id', 'row-' + id);
+    c.find('.url').attr('name', 'url-' + id);
+    c.find('.query').attr('name', 'query-' + id);
+    c.find('.value').attr('name', 'value-' + id);
+	c.find('.punch').attr('name', 'punch-' + id);
+	
+	$('.timepicker1').timepicker();
+	
+	$("select[name^='punch_select']").change(function(){
+		$('input[name=punch_type_OP]').val($(this).val());
+	});
+	$("input[name^='type_type_OP']").hide();
+	
+    c.find('.remove').click(function(){
+      c.remove();
+      var id = c.attr('id').replace(/row-/, '');
+      localStorage.removeItem('url-' + id);
+      localStorage.removeItem('query-' + id);
+      localStorage.removeItem('value-' + id);
+	  localStorage.removeItem('punch-' + id);
+	  return false;
+    });
+    return c;
+  }
+  newQuery.click(function(){
+  console.log("new button works");
+    createQuery(++id);
+    return false;
+  });
+  
+  page.find('input[type=checkbox]').each(function(){
+    var key = $(this).attr('name');
+    localStorage[key] = localStorage[key] || '';
+    if (localStorage[key]){
+      $(this).attr('checked', 'checked');
+    }
+    $(this).change(function(){
+      if ($(this).attr('checked')){
+        localStorage[key] = 'checked';
+      }else{
+        localStorage[key] = '';
+      }
+    });
+  });
+
+  page.find('input[type=text]').live('keyup', function(){
+    var key = $(this).attr('name');
+	
+    localStorage[key] = $(this).val();
+	alert($(this).val());
+  });
+
+
+  for (var k in localStorage){
+    if (k.match(/^(query|url|value|punch)-(\d+)/)){
+      var type = RegExp.$1;
+      var id = RegExp.$2;
+      var c = createQuery(id);
+      c.find('.' + type).val(localStorage[k]);
+    }
+  };
+  
+  if (id == 0){
+    var c = createQuery(++id);
+    c.find('.url').val('http://akkunchoi.github.io/Autofill-chrome-extension/.*');
+    c.find('.query').val('input[name=example]');
+    c.find('.value').val('Hello world!');
+    c.find('input').trigger('keyup');
+
+  }
+});
+
 /* // Saves options to chrome.storage
 function save_options() {
   var punchtype_OP = document.getElementById('punchtype_OP').value;
@@ -35,9 +127,10 @@ function restore_options() {
 document.addEventListener('DOMContentLoaded', restore_options);
 document.getElementById('save').addEventListener('click', save_options); */
 
- $(document).ready(function(){
+/*  $(document).ready(function(){
+
 	starttimepicker ();
-	//getpunchval ();
+/* 	//getpunchval ();
       var i=1;
 	  
 	 
@@ -79,9 +172,12 @@ document.getElementById('save').addEventListener('click', save_options); */
 	});
 	
 
-  
-});
+   */
+/*}); */
 
-function starttimepicker () {
-$('.timepicker1').timepicker();
-};
+//function starttimepicker () {
+  //  $('.datetimepicker1').datetimepicker({
+      
+    //});
+//$('.timepicker1').timepicker();
+//};
