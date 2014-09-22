@@ -1,8 +1,93 @@
 $(function() {
-	$('.timepicker1').timepicker();
+	$('#datetimepicker1').timepicker({});
+
+
+	var dataSet;
+
+	try{
+		dataSet = JSON.parse(localStorage.getItem('dataSet')) || [];
+	} catch (err) {
+		dataSet = [];
+	}
+	
+	$('#myTable').dataTable({
+		"data": [],
+			"columns": [{
+			"title": "Badge ID"
+		}, {
+			"title": "Punch Type"
+		}, {
+		"title": "Punch Value"
+		}, {
+			"title": "Time"
+		}, {
+			"title": "Action"
+		}],
+			"bStateSave": true,
+			"stateSave": true,
+			"bPaginate": false,
+			"bLengthChange": false,
+			"bFilter": false,
+			"bInfo": false,
+			"bAutoWidth": false,
+			"fnCreatedRow": function (nRow, aData, iDataIndex) {
+        $(nRow).attr('id', 'row-' + iDataIndex) // or whatever you choose to set as the id
+		},
+	});
+	oTable = $('#myTable').DataTable();
+	for (var i = 0; i < dataSet.length; i++) {
+		oTable.row.add(dataSet[i]).draw();
+	}
+
+	
+	$('#Save').click(function () {
+		
+
+		if ($('#badgeID').val() == '' || $('#punchtype select option:selected').val() == '' || $('.time').val() == '') {
+			$('#alert_placeholder').html('<div id="dialog-confirm" title="Error" class="alert alert-danger alert-dismissible" role="alert"><button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button><p><span class="ui-icon ui-icon-alert" style="float:left; margin:0 7px 0px 0;"></span>Please fill all the required fields!</p></div>')
+
+		} else {
+
+			var data = [
+
+				$('#badgeID').val(),
+				$('#punchtype option:selected').text(),
+				$('#punchtype').val(),
+				$('.time').val(),
+				"<button class='delete btn btn-danger'><span class='glyphicon glyphicon-remove'></span></button>"
+			];
+			oTable.row.add(data).draw();
+			dataSet.push(data);
+			localStorage.setItem('dataSet', JSON.stringify(dataSet));   
+			$('#addpunchmodal').modal('hide')
+
+		}
+	
+	
+	});
+	$('#addpunchmodal').on('shown.bs.modal', function (e) {
+		$('#datetimepicker1').timepicker({});
+		$('#badgeID').attr({ maxLength : 5 });
+	})
+	
+	$('#addpunchmodal').on('hidden.bs.modal', function (e) {
+		$('badgeID').val('');
+		$('punchtype').val('');
+		$(this).prop('checked', false);
+		$(".alert").alert('close')
+	})
+	
+	$(document).on('click', '.delete', function () {
+		var row = $(this).closest('tr');
+		var index = $("tbody").children().index(row);
+		oTable.row(row).remove().draw();
+		dataSet.splice(index, 1);
+		localStorage.setItem('dataSet', JSON.stringify(dataSet));   
+	});
+	
 });
 
-jQuery(function($){
+/* jQuery(function($){
 
   var page = $('#options-page'); 
   var newQuery = page.find('.new');
@@ -22,14 +107,18 @@ jQuery(function($){
     c.find('.url').attr('name', 'url-' + id);
     c.find('.query').attr('name', 'query-' + id);
     c.find('.value').attr('name', 'value-' + id);
+	c.find('.time').attr('name', 'time-' + id);
 	c.find('.punch').attr('name', 'punch-' + id);
 	
 	$('.timepicker1').timepicker();
 	
-	$("select[name^='punch_select']").change(function(){
-		$('input[name=punch_type_OP]').val($(this).val());
+	$("select[name^='punch_type_OP']").change('change keyup paste click', function(){
+		$("input[name^='punch-']").val($(this).val());
 	});
-	$("input[name^='type_type_OP']").hide();
+	$("input[name^='time_type_OP']").change('change keyup paste click', function(){
+		$("input[name^=time-]").val($(this).val());
+	});
+	//$("input[name^='punch_type_OP']").hide();
 	
     c.find('.remove').click(function(){
       c.remove();
@@ -37,7 +126,7 @@ jQuery(function($){
       localStorage.removeItem('url-' + id);
       localStorage.removeItem('query-' + id);
       localStorage.removeItem('value-' + id);
-	  localStorage.removeItem('punch-' + id);
+	  localStorage.removeItem('time-' + id);
 	  return false;
     });
     return c;
@@ -62,17 +151,40 @@ jQuery(function($){
       }
     });
   });
+  
+  if (typeof (window.localStorage) != "undefined") {
 
-  page.find('input[type=text]').live('keyup', function(){
-    var key = $(this).attr('name');
+        // will get value of specific id from the browser localStorage and set to the input 
+        page.find("input[type=text]").val(function () {
+            return localStorage.getItem(this.id);
+        });
+
+        // will set values in browser localStorage for further reference
+        page.find("input[type=text]").on("change", function () {
+            localStorage.setItem(this.id, $(this).val());
+			console.log("Input has changed");
+        });
+		
+	}
+ 
+  */
+ 
+  //page.find('input[type=text]').on("input", function(){
+  //page.find.on("change", 'input[type=text]', function(){
+  //page.on('change keyup paste click', 'input[type=text]', function(){
+  //page.find('input[type=text]').on("input", function(){
+    //var key = $(this).attr('name');
+	//var inputvalue = $(this).val();
 	
-    localStorage[key] = $(this).val();
-	alert($(this).val());
-  });
+    //localStorage[key] = $(this).val();
+	//console.log("it works");
+	//alert(inputvalue);
+	//alert("works?"+$(this).val());
+  //});
 
-
+/* 
   for (var k in localStorage){
-    if (k.match(/^(query|url|value|punch)-(\d+)/)){
+    if (k.match(/^(query|url|value|time|punch)-(\d+)/)){
       var type = RegExp.$1;
       var id = RegExp.$2;
       var c = createQuery(id);
@@ -85,10 +197,12 @@ jQuery(function($){
     c.find('.url').val('http://akkunchoi.github.io/Autofill-chrome-extension/.*');
     c.find('.query').val('input[name=example]');
     c.find('.value').val('Hello world!');
-    c.find('input').trigger('keyup');
+	c.find('.punch').val();
+	c.find('.time').val();
+    c.find('input').trigger('change');
 
   }
-});
+}); */
 
 /* // Saves options to chrome.storage
 function save_options() {
