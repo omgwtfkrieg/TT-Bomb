@@ -3,7 +3,8 @@ $(function() {
 
 
 	var dataSet;
-
+	var id = 0;
+	
 	try{
 		dataSet = JSON.parse(localStorage.getItem('dataSet')) || [];
 	} catch (err) {
@@ -13,6 +14,8 @@ $(function() {
 	$('#myTable').dataTable({
 		"data": [],
 			"columns": [{
+			"title": "ID"
+		}, {
 			"title": "Badge ID"
 		}, {
 			"title": "Punch Type"
@@ -39,8 +42,12 @@ $(function() {
 		oTable.row.add(dataSet[i]).draw();
 	}
 
-	
 	$('#Save').click(function () {
+		createNew(++id);
+		return false;
+	});
+	
+	function createNew(id){
 		
 
 		if ($('#badgeID').val() == '' || $('#punchtype select option:selected').val() == '' || $('.time').val() == '') {
@@ -49,22 +56,23 @@ $(function() {
 		} else {
 
 			var data = [
-
+				id,
 				$('#badgeID').val(),
 				$('#punchtype option:selected').text(),
 				$('#punchtype').val(),
 				$('.time').val(),
-				"<button class='delete btn btn-danger'><span class='glyphicon glyphicon-remove'></span></button>"
+				"<button class='delete btn btn-danger' value=''><span class='glyphicon glyphicon-remove'></span></button>"
 			];
 			oTable.row.add(data).draw();
 			dataSet.push(data);
-			localStorage.setItem('dataSet', JSON.stringify(dataSet));   
+			localStorage.setItem('dataSet' + id, JSON.stringify(dataSet));   
 			$('#addpunchmodal').modal('hide')
+
 
 		}
 	
 	
-	});
+	};
 	$('#addpunchmodal').on('shown.bs.modal', function (e) {
 		$('#datetimepicker1').timepicker({});
 		$('#badgeID').attr({ maxLength : 5 });
@@ -82,7 +90,9 @@ $(function() {
 		var index = $("tbody").children().index(row);
 		oTable.row(row).remove().draw();
 		dataSet.splice(index, 1);
-		localStorage.setItem('dataSet', JSON.stringify(dataSet));   
+		var firstcol = $(this).parents('tr:first').find('td:first').text();
+		//alert(firstcol);
+		localStorage.removeItem('dataSet' + firstcol, JSON.stringify(dataSet));   
 	});
 	
 });
