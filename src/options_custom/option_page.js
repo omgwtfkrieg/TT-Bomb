@@ -4,14 +4,9 @@ $(function() {
 
 	var dataSet;
 	var id = 0;
-	var x = 0;
 	
 	try{
-		for (var i = 0; i < localStorage.length; i++) {
-		dataSet = JSON.parse(localStorage.getItem('dataSet'+x)) || [];
-		x++;
-		}
-
+		dataSet = JSON.parse(localStorage.getItem('dataSet')) || [];
 	} catch (err) {
 		dataSet = [];
 	}
@@ -59,14 +54,14 @@ $(function() {
 			$('#alert_placeholder').html('<div id="dialog-confirm" title="Error" class="alert alert-danger alert-dismissible" role="alert"><button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button><p><span class="ui-icon ui-icon-alert" style="float:left; margin:0 7px 0px 0;"></span>Please fill all the required fields!</p></div>')
 
 		} else {
-			
+
 			var data = [
 				id,
 				$('#badgeID').val(),
 				$('#punchtype option:selected').text(),
 				$('#punchtype').val(),
 				$('.time').val(),
-				"<button class='delete btn btn-danger' value=''><span class='glyphicon glyphicon-remove'></span></button><button type='button' class='showlocalval btn btn-default'>localstorage values</button>"
+				"<button class='delete btn btn-danger' value=''><span class='glyphicon glyphicon-remove'></span></button>"
 			];
 			oTable.row.add(data).draw();
 			dataSet.push(data);
@@ -98,12 +93,6 @@ $(function() {
 		var firstcol = $(this).parents('tr:first').find('td:first').text();
 		//alert(firstcol);
 		localStorage.removeItem('dataSet' + firstcol, JSON.stringify(dataSet));   
-	});
-	
-	$(document).on('click', '.showlocalval', function () { 
-		var number = $(this).parents('tr:first').find('td:first').text();
-		var arr = JSON.parse(localStorage.getItem('dataSet'+number));
-		alert(arr);
 	});
 	
 });
