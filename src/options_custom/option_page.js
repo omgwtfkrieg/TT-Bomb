@@ -1,16 +1,47 @@
 $(function() {
 	$('#datetimepicker1').timepicker({});
+	
 
 
 	var dataSet;
 	var id = 0;
+	//var len;
+	
+/* 	for ( var i = 0, len = localStorage.length; i < len; ++i ) {
+  console.log(localStorage.getItem(localStorage.key(i)));
+} */
 	
 	try{
-		dataSet = JSON.parse(localStorage.getItem('dataSet')) || [];
-	} catch (err) {
-		dataSet = [];
-	}
-	
+		var x = 0;
+			/* //var dataSet;
+			//for (var i = 0; i < localStorage.length; i++) {
+				//dataSet = JSON.parse(localStorage.getItem('dataSet'));
+				//dataSet = JSON.parse(localStorage.getItem('dataSet' + x));
+				if (JSON.parse(localStorage.getItem('dataSet') != null)){
+					alert(dataSet);
+					//x++;
+				} else{
+					dataSet = JSON.parse(localStorage.getItem('dataSet'));
+					alert(dataSet);
+					
+				}
+				alert(dataSet);
+			    x++;
+				 */
+				 for (var i = 0; i < localStorage.length; i++){
+				 if (dataSet + x !== null) {
+				 dataSet = JSON.parse(localStorage.getItem('dataSet'+x)) || [];
+x++;
+alert(dataSet);
+				 }else{
+				 x++
+return false;
+			}
+		}	
+		} catch (err) {
+			dataSet = [];
+		}
+
 	$('#myTable').dataTable({
 		"data": [],
 			"columns": [{
@@ -86,13 +117,16 @@ $(function() {
 	})
 	
 	$(document).on('click', '.delete', function () {
+		var firstcol = $(this).parents('tr:first').find('td:first').text();
+		localStorage.removeItem('dataSet' + firstcol, JSON.stringify(dataSet)); 
 		var row = $(this).closest('tr');
 		var index = $("tbody").children().index(row);
 		oTable.row(row).remove().draw();
 		dataSet.splice(index, 1);
-		var firstcol = $(this).parents('tr:first').find('td:first').text();
+
 		//alert(firstcol);
-		localStorage.removeItem('dataSet' + firstcol, JSON.stringify(dataSet));   
+
+			
 	});
 	
 });
