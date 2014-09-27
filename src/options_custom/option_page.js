@@ -1,52 +1,37 @@
 $(function() {
+
+$('.boom').click(function () {
+printStorageBody();
+});
+
+var printStorageBody = function(){
+    // $("body").html("");
+    // for(var i=0;i<localStorage.length ;i++)
+        // $("body").append(i + " : " + localStorage.getItem(localStorage.key(i)) + "<br />");
+		
+	// var json = JSON.parse(localStorage["dataSet"]);
+	// for (i=0;i<json.length;i++){
+				// if (json[i] == '12:15 AM') {
+				// alert("hello");
+				// };}
+	// localStorage["results"] = JSON.stringify(json);
+};
+
 	$('#datetimepicker1').timepicker({});
-	
 
 
 	var dataSet;
-	var id = 0;
-	//var len;
-	
-/* 	for ( var i = 0, len = localStorage.length; i < len; ++i ) {
-  console.log(localStorage.getItem(localStorage.key(i)));
-} */
-	
-	try{
-		var x = 0;
-			/* //var dataSet;
-			//for (var i = 0; i < localStorage.length; i++) {
-				//dataSet = JSON.parse(localStorage.getItem('dataSet'));
-				//dataSet = JSON.parse(localStorage.getItem('dataSet' + x));
-				if (JSON.parse(localStorage.getItem('dataSet') != null)){
-					alert(dataSet);
-					//x++;
-				} else{
-					dataSet = JSON.parse(localStorage.getItem('dataSet'));
-					alert(dataSet);
-					
-				}
-				alert(dataSet);
-			    x++;
-				 */
-				 for (var i = 0; i < localStorage.length; i++){
-				 if (dataSet + x !== null) {
-				 dataSet = JSON.parse(localStorage.getItem('dataSet'+x)) || [];
-x++;
-alert(dataSet);
-				 }else{
-				 x++
-return false;
-			}
-		}	
-		} catch (err) {
-			dataSet = [];
-		}
+	var realdataSet;
 
+	try{
+		dataSet = JSON.parse(localStorage.getItem('dataSet')) || [];
+	} catch (err) {
+		dataSet = [];
+	}
+	
 	$('#myTable').dataTable({
 		"data": [],
 			"columns": [{
-			"title": "ID"
-		}, {
 			"title": "Badge ID"
 		}, {
 			"title": "Punch Type"
@@ -64,46 +49,49 @@ return false;
 			"bFilter": false,
 			"bInfo": false,
 			"bAutoWidth": false,
-			"fnCreatedRow": function (nRow, aData, iDataIndex) {
-        $(nRow).attr('id', 'row-' + iDataIndex) // or whatever you choose to set as the id
-		},
+			
 	});
 	oTable = $('#myTable').DataTable();
 	for (var i = 0; i < dataSet.length; i++) {
 		oTable.row.add(dataSet[i]).draw();
 	}
 
-	$('#Save').click(function () {
-		createNew(++id);
-		return false;
-	});
 	
-	function createNew(id){
+	$('#Save').click(function () {
 		
 
 		if ($('#badgeID').val() == '' || $('#punchtype select option:selected').val() == '' || $('.time').val() == '') {
 			$('#alert_placeholder').html('<div id="dialog-confirm" title="Error" class="alert alert-danger alert-dismissible" role="alert"><button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button><p><span class="ui-icon ui-icon-alert" style="float:left; margin:0 7px 0px 0;"></span>Please fill all the required fields!</p></div>')
 
 		} else {
-
-			var data = [
-				id,
+			
+			var tabledata = [
 				$('#badgeID').val(),
 				$('#punchtype option:selected').text(),
 				$('#punchtype').val(),
 				$('.time').val(),
-				"<button class='delete btn btn-danger' value=''><span class='glyphicon glyphicon-remove'></span></button>"
+				"<button class='delete btn btn-danger'><span class='glyphicon glyphicon-remove'></span></button>"
 			];
-			oTable.row.add(data).draw();
-			dataSet.push(data);
-			localStorage.setItem('dataSet' + id, JSON.stringify(dataSet));   
+			oTable.row.add(tabledata).draw();
+			dataSet.push(tabledata);
+			localStorage.setItem('dataSet', JSON.stringify(dataSet));
+			
+			var realdataSet = JSON.parse(localStorage.getItem('realdataSet')) || [];
+			var newItem  = {
+				badgeID : $('#badgeID').val(),
+				punchType : $('#punchtype option:selected').text(),
+				punch : $('#punchtype').val(),
+				time : $('.time').val(),
+				button: "<button class='delete btn btn-danger'><span class='glyphicon glyphicon-remove'></span></button>"
+			};
+			realdataSet.push(newItem);
+			localStorage.setItem("realdataSet", JSON.stringify(realdataSet));   
 			$('#addpunchmodal').modal('hide')
-
 
 		}
 	
 	
-	};
+	});
 	$('#addpunchmodal').on('shown.bs.modal', function (e) {
 		$('#datetimepicker1').timepicker({});
 		$('#badgeID').attr({ maxLength : 5 });
@@ -117,16 +105,13 @@ return false;
 	})
 	
 	$(document).on('click', '.delete', function () {
-		var firstcol = $(this).parents('tr:first').find('td:first').text();
-		localStorage.removeItem('dataSet' + firstcol, JSON.stringify(dataSet)); 
 		var row = $(this).closest('tr');
 		var index = $("tbody").children().index(row);
 		oTable.row(row).remove().draw();
 		dataSet.splice(index, 1);
-
-		//alert(firstcol);
-
-			
+		localStorage.setItem('dataSet', JSON.stringify(dataSet));  
+		realdataSet.splice(index, 1);
+		localStorage.setItem('realdataSet', JSON.stringify(realdataSet));  		
 	});
 	
 });
