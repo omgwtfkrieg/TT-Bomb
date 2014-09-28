@@ -4,6 +4,33 @@ $('.boom').click(function () {
 printStorageBody();
 });
 
+//will loop&search 
+var refreshId = setInterval(function(){
+	
+	var d = new Date();
+		//alert (d);
+	var hourString;
+		//var hourInt;
+	var amPm = "AM";
+	if ( d.getHours() > 11 ) {
+		amPm = "PM"
+		hourString = d.getHours() - 12;
+	} else {
+		amPm = "AM"
+		hourString = d.getHours();
+	}
+
+
+	var currenttime = hourString + ":" + d.getMinutes() + " " + amPm;
+
+    var json = JSON.parse(localStorage.getItem("realdataSet"));
+		for (i=0;i<json.length;i++){
+			if (json[i].time == currenttime){
+				console.log(json[i].badgeID + "--" + json[i].punchType +"--"+ json[i].punch +"--"+ json[i].time);
+			};
+		}
+}, 5000);
+
 var printStorageBody = function(){
     // $("body").html("");
     // for(var i=0;i<localStorage.length ;i++)
@@ -25,6 +52,7 @@ var printStorageBody = function(){
 
 	try{
 		dataSet = JSON.parse(localStorage.getItem('dataSet')) || [];
+		realdataSet = JSON.parse(localStorage.getItem('realdataSet')) || [];
 	} catch (err) {
 		dataSet = [];
 	}
@@ -49,7 +77,9 @@ var printStorageBody = function(){
 			"bFilter": false,
 			"bInfo": false,
 			"bAutoWidth": false,
-			
+			"fnCreatedRow": function (nRow, aData, iDataIndex) {
+        $(nRow).attr('id', 'row-' + iDataIndex) // or whatever you choose to set as the id
+		},
 	});
 	oTable = $('#myTable').DataTable();
 	for (var i = 0; i < dataSet.length; i++) {
@@ -76,7 +106,7 @@ var printStorageBody = function(){
 			dataSet.push(tabledata);
 			localStorage.setItem('dataSet', JSON.stringify(dataSet));
 			
-			var realdataSet = JSON.parse(localStorage.getItem('realdataSet')) || [];
+			
 			var newItem  = {
 				badgeID : $('#badgeID').val(),
 				punchType : $('#punchtype option:selected').text(),
@@ -105,14 +135,59 @@ var printStorageBody = function(){
 	})
 	
 	$(document).on('click', '.delete', function () {
+		var index = $(this).closest('tr').attr('id').split('-')[1];
 		var row = $(this).closest('tr');
-		var index = $("tbody").children().index(row);
+		//var index = $("tbody").children().index(row);
+		//alert(row + index);
 		oTable.row(row).remove().draw();
 		dataSet.splice(index, 1);
-		localStorage.setItem('dataSet', JSON.stringify(dataSet));  
+		localStorage.setItem('dataSet', JSON.stringify(dataSet));
+		//console.log(dataSet);
 		realdataSet.splice(index, 1);
-		localStorage.setItem('realdataSet', JSON.stringify(realdataSet));  		
+
+		localStorage.setItem('realdataSet', JSON.stringify(realdataSet));
+		//var row = $(this).closest('tr');
+		//var index = $("tbody").children().index(row);
+		
+		//alert(n);
+
 	});
+
+	$(document).on('click', '.test-1', function () {
+		//var data = JSON.parse(localStorage.getItem("realdataSet"));
+			//alert(data[0].badgeID + "--" + data[0].punchType +"--"+ data[0].punch +"--"+ data[0].time
+		//);
+/* 		for (var i=0; i<100; i++) {
+		   if (localStorage('dataset'+i) == "3:15 PM")
+		} */
+		//This will compare current time and stored time in localStorage and get all data from that entry 
+		//lets get currenttime
+		var d = new Date();
+		//alert (d);
+		var hourString;
+		//var hourInt;
+		var amPm = "AM";
+		if ( d.getHours() > 11 ) {
+			amPm = "PM"
+			hourString = d.getHours() - 12;
+		} else {
+			amPm = "AM"
+			hourString = d.getHours();
+		}
+
+
+		var currenttime = hourString + ":" + d.getMinutes() + " " + amPm;
+		alert (currenttime);
+		
+		/* var json = JSON.parse(localStorage.getItem("realdataSet"));
+		for (i=0;i<json.length;i++){
+					if (json[i].time == "4:00 PM"){
+						alert(json[i].badgeID + "--" + json[i].punchType +"--"+ json[i].punch +"--"+ json[i].time);
+					};} */
+
+		
+	});
+	
 	
 });
 
