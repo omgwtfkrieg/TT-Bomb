@@ -4,13 +4,11 @@ $('.boom').click(function () {
 printStorageBody();
 });
 
-//will loop&search 
+//will loop, search in localStorage and execute if stored time matches current time.  
 var refreshId = setInterval(function(){
 	
 	var d = new Date();
-		//alert (d);
 	var hourString;
-		//var hourInt;
 	var amPm = "AM";
 	if ( d.getHours() > 11 ) {
 		amPm = "PM"
@@ -31,21 +29,8 @@ var refreshId = setInterval(function(){
 		}
 }, 5000);
 
-var printStorageBody = function(){
-    // $("body").html("");
-    // for(var i=0;i<localStorage.length ;i++)
-        // $("body").append(i + " : " + localStorage.getItem(localStorage.key(i)) + "<br />");
-		
-	// var json = JSON.parse(localStorage["dataSet"]);
-	// for (i=0;i<json.length;i++){
-				// if (json[i] == '12:15 AM') {
-				// alert("hello");
-				// };}
-	// localStorage["results"] = JSON.stringify(json);
-};
-
+	//initiates bootstrap-timepicker
 	$('#datetimepicker1').timepicker({});
-
 
 	var dataSet;
 	var realdataSet;
@@ -57,6 +42,7 @@ var printStorageBody = function(){
 		dataSet = [];
 	}
 	
+	//initiates DataTable
 	$('#myTable').dataTable({
 		"data": [],
 			"columns": [{
@@ -78,7 +64,7 @@ var printStorageBody = function(){
 			"bInfo": false,
 			"bAutoWidth": false,
 			"fnCreatedRow": function (nRow, aData, iDataIndex) {
-        $(nRow).attr('id', 'row-' + iDataIndex) // or whatever you choose to set as the id
+        $(nRow).attr('id', 'row-' + iDataIndex) // this adds a custom row ID for each entry
 		},
 	});
 	oTable = $('#myTable').DataTable();
@@ -86,10 +72,10 @@ var printStorageBody = function(){
 		oTable.row.add(dataSet[i]).draw();
 	}
 
-	
+	//saves entry to localStorage
 	$('#Save').click(function () {
 		
-
+		//checks modal if input fields are not empty, if they are it will show an alert message
 		if ($('#badgeID').val() == '' || $('#punchtype select option:selected').val() == '' || $('.time').val() == '') {
 			$('#alert_placeholder').html('<div id="dialog-confirm" title="Error" class="alert alert-danger alert-dismissible" role="alert"><button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button><p><span class="ui-icon ui-icon-alert" style="float:left; margin:0 7px 0px 0;"></span>Please fill all the required fields!</p></div>')
 
