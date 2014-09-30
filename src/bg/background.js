@@ -28,7 +28,12 @@ var filter = {
 chrome.webNavigation.onCommitted.addListener(onWebNav, filter);
 chrome.webNavigation.onHistoryStateUpdated.addListener(onWebNav, filter);
 
-
+chrome.browserAction.onClicked.addListener(function(tab) {
+  chrome.tabs.sendRequest(tab.id, {method: "getLocalStorage"}, function(response) {
+    var myObjectRetrieved = JSON.parse(response.data);
+    console.log(myObjectRetrieved);
+  });
+});
 
 /* chrome.storage.sync.get('badgeID_OP', function (result) {
 console.log('getting Badge from the Option page ' + items.badgeID_OP);

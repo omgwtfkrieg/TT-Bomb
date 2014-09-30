@@ -11,7 +11,20 @@ chrome.extension.sendMessage({}, function(response) {
 	}
 	}, 10);
 });
+///////////////////////////////////////
 
+chrome.extension.onRequest.addListener(function(request, sender, sendResponse) {
+  if (request.method == 'getLocalStorage') {
+    var objectString = JSON.stringify(localStorage);
+    sendResponse({data: objectString});
+  } else {
+    sendResponse({}); // snub them.
+  }
+});
+
+
+
+///////////////////////////////////////
 //This line opens up a long-lived connection to your background page.
 var port = chrome.runtime.connect({name:"mycontentscript"});
 port.onMessage.addListener(function(message,sender){
