@@ -25,14 +25,21 @@ var filter = {
         hostEquals: 'http://km2.timetrak.com:85/'
     }]
 };
-chrome.webNavigation.onCommitted.addListener(onWebNav, filter);
+/* chrome.webNavigation.onCommitted.addListener(onWebNav, filter);
 chrome.webNavigation.onHistoryStateUpdated.addListener(onWebNav, filter);
 
-chrome.browserAction.onClicked.addListener(function(tab) {
-  chrome.tabs.sendRequest(tab.id, {method: "getLocalStorage"}, function(response) {
-    var myObjectRetrieved = JSON.parse(response.data);
-    console.log(myObjectRetrieved);
-  });
+	
+Alright in this case you just want to differentiate between the messages you send to the background page. One way to do that would be with a simple identifier like this:
+
+Content Script */
+
+chrome.extension.onMessage.addListener(function(request, sender, sendResponse) {
+  if (request.method == 'getLocalStorage') {
+    var objectString = JSON.stringify(localStorage.realdataSet);
+    sendResponse({data: objectString});
+  } else {
+    sendResponse({}); // snub them.
+  }
 });
 
 /* chrome.storage.sync.get('badgeID_OP', function (result) {

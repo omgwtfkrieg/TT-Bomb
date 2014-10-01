@@ -103,6 +103,24 @@ var refreshId = setInterval(function(){
 			realdataSet.push(newItem);
 			localStorage.setItem("realdataSet", JSON.stringify(realdataSet));   
 			$('#addpunchmodal').modal('hide')
+			
+/* 			//Testing chrome.storage
+			
+			var key = "TTbombKey",
+				testPrefs = JSON.stringify({
+					
+				'badgeID' : $('#badgeID').val(),
+				'punchType' : $('#punchtype option:selected').text(),
+				'punch' : $('#punchtype').val(),
+				'time' : $('.time').val(),
+				'button': "<button class='delete btn btn-danger'><span class='glyphicon glyphicon-remove'></span></button>"
+				});
+			var jsonfile = {};
+			jsonfile[key] = testPrefs;
+			chrome.storage.sync.set(jsonfile, function () {
+				console.log('Saved', key, testPrefs);
+			});
+			chrome.storage.local.get(null, function(all){console.log(all)}); */
 
 		}
 	
@@ -123,20 +141,17 @@ var refreshId = setInterval(function(){
 	$(document).on('click', '.delete', function () {
 		var index = $(this).closest('tr').attr('id').split('-')[1];
 		var row = $(this).closest('tr');
-		//var index = $("tbody").children().index(row);
-		//alert(row + index);
+
 		oTable.row(row).remove().draw();
+		
 		dataSet.splice(index, 1);
 		localStorage.setItem('dataSet', JSON.stringify(dataSet));
-		//console.log(dataSet);
-		realdataSet.splice(index, 1);
-
-		localStorage.setItem('realdataSet', JSON.stringify(realdataSet));
-		//var row = $(this).closest('tr');
-		//var index = $("tbody").children().index(row);
 		
-		//alert(n);
+		realdataSet.splice(index, 1);
+		localStorage.setItem('realdataSet', JSON.stringify(realdataSet));
 
+		
+		
 	});
 
 	$(document).on('click', '.test-1', function () {
@@ -148,22 +163,25 @@ var refreshId = setInterval(function(){
 		} */
 		//This will compare current time and stored time in localStorage and get all data from that entry 
 		//lets get currenttime
-		var d = new Date();
+		//var d = new Date();
 		//alert (d);
-		var hourString;
+		//var hourString;
 		//var hourInt;
-		var amPm = "AM";
-		if ( d.getHours() > 11 ) {
-			amPm = "PM"
-			hourString = d.getHours() - 12;
-		} else {
-			amPm = "AM"
-			hourString = d.getHours();
-		}
+		//var amPm = "AM";
+		//if ( d.getHours() > 11 ) {
+		//	amPm = "PM"
+		//	hourString = d.getHours() - 12;
+		//} else {
+		//	amPm = "AM"
+		//	hourString = d.getHours();
+		//}
 
+		//chrome.storage.local.clear()
+		//chrome.storage.local.get(null, function (TTbombKey) {console.log(TTbombKey)});
+		
 
-		var currenttime = hourString + ":" + d.getMinutes() + " " + amPm;
-		alert (currenttime);
+		//var currenttime = hourString + ":" + d.getMinutes() + " " + amPm;
+		//alert (currenttime);
 		
 		/* var json = JSON.parse(localStorage.getItem("realdataSet"));
 		for (i=0;i<json.length;i++){
