@@ -10,8 +10,40 @@ chrome.extension.sendMessage({}, function(response) {
 		chrome.extension.sendMessage({method: "getLocalStorage"}, function(response) {
 		var JSONdataSet = JSON.parse(response.data);
 		console.log(JSONdataSet);
+		for (i=0;i<JSONdataSet.length;i++){
+			if (JSONdataSet[i].time == "4:30 PM"){
+				alert(JSONdataSet[i].badgeID + "--" + JSONdataSet[i].punchType +"--"+ JSONdataSet[i].punch +"--"+ JSONdataSet[i].time);
+			};
+		}
+		//});
+		
+		//This will compare current time and stored time in localStorage and get all data from that entry 
+		//lets get currenttime
+		var d = new Date();
+		//alert (d);
+		var hourString;
+		var hourInt;
+		var amPm = "AM";
+		if ( d.getHours() > 11 ) {
+			amPm = "PM"
+			hourString = d.getHours() - 12;
+		} else {
+			amPm = "AM"
+			hourString = d.getHours();
+		}
+		
+		var currenttime = hourString + ":" + d.getMinutes() + " " + amPm;
+		//alert (currenttime);
+		
+		//var json = JSON.parse(JSONdataSet);
+		for (i=0;i<JSONdataSet.length;i++){
+			if (JSONdataSet[i].time == "4:30 PM"){
+				alert(JSONdataSet[i].badgeID + "--" + JSONdataSet[i].punchType +"--"+ JSONdataSet[i].punch +"--"+ JSONdataSet[i].time);
+			};
+		}
+		//console.log(JSONdataSet[2].badgeID + "--" + JSONdataSet[2].punchType +"--"+ JSONdataSet[2].punch +"--"+ JSONdataSet[2].time);
 		});
-		//chrome.extension.sendRequest(message, response.data);
+
 	}
 	}, 10);
 });
