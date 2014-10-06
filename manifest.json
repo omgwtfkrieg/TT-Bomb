@@ -23,6 +23,7 @@
     "default_popup": "src/page_action/page_action.html"
   },
   "permissions": [
+	"background",
 	"identity",
     "webNavigation",
     "notifications",
@@ -34,9 +35,7 @@
   "content_scripts": [
     {
       "matches": [
-        "http://km2.timetrak.com:85/*",
-        "http://12.168.15.20:85/*",
-		"http://75.144.77.177:85/*"
+		"http://*/*"
       ],
       "js": [
         "js/jquery/jquery.js", "src/inject/inject.js"

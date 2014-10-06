@@ -4,31 +4,6 @@ $('.boom').click(function () {
 printStorageBody();
 });
 
-//will loop, search in localStorage and execute if stored time matches current time.  
-var refreshId = setInterval(function(){
-	
-	var d = new Date();
-	var hourString;
-	var amPm = "AM";
-	if ( d.getHours() > 11 ) {
-		amPm = "PM"
-		hourString = d.getHours() - 12;
-	} else {
-		amPm = "AM"
-		hourString = d.getHours();
-	}
-
-
-	var currenttime = hourString + ":" + d.getMinutes() + " " + amPm;
-
-    var json = JSON.parse(localStorage.getItem("realdataSet"));
-		for (i=0;i<json.length;i++){
-			if (json[i].time == currenttime){
-				console.log(json[i].badgeID + "--" + json[i].punchType +"--"+ json[i].punch +"--"+ json[i].time);
-			};
-		}
-}, 5000);
-
 	//initiates bootstrap-timepicker
 	$('#datetimepicker1').timepicker({});
 

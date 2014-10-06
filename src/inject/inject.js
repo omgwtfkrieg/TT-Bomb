@@ -5,44 +5,49 @@ chrome.extension.sendMessage({}, function(response) {
 
 		// ----------------------------------------------------------
 		// This part of the script triggers when page is done loading
-		//console.log("Hello. This message was sent from scripts/inject.js");
+		console.log("Hello. This message was sent from scripts/inject.js");
 		// ----------------------------------------------------------
-		chrome.extension.sendMessage({method: "getLocalStorage"}, function(response) {
-		var JSONdataSet = JSON.parse(response.data);
-		console.log(JSONdataSet);
-		for (i=0;i<JSONdataSet.length;i++){
-			if (JSONdataSet[i].time == "4:30 PM"){
-				alert(JSONdataSet[i].badgeID + "--" + JSONdataSet[i].punchType +"--"+ JSONdataSet[i].punch +"--"+ JSONdataSet[i].time);
-			};
-		}
+		
+		// This gets the localStorage from the background/option page
+		//chrome.extension.sendMessage({method: "getLocalStorage"}, function(response) {
+		//var JSONdataSet = JSON.parse(response.data);
+		//console.log(JSONdataSet);
+		
+		// we Parse it again to optain the data individually.
+		//var dataSet = JSON.parse(JSONdataSet);
+		//for (i=0;i<dataSet.length;i++){
+		//	if (dataSet[i].time == "9:15 PM"){
+		//		console.log(dataSet[i].badgeID + "--" + dataSet[i].punchType +"--"+ dataSet[i].punch +"--"+ dataSet[i].time);
+		//	};
+		//}
 		//});
 		
 		//This will compare current time and stored time in localStorage and get all data from that entry 
 		//lets get currenttime
-		var d = new Date();
+		//var d = new Date();
 		//alert (d);
-		var hourString;
-		var hourInt;
-		var amPm = "AM";
-		if ( d.getHours() > 11 ) {
-			amPm = "PM"
-			hourString = d.getHours() - 12;
-		} else {
-			amPm = "AM"
-			hourString = d.getHours();
-		}
+		//var hourString;
+		//var hourInt;
+		//var amPm = "AM";
+		//if ( d.getHours() > 11 ) {
+		//	amPm = "PM"
+		//	hourString = d.getHours() - 12;
+		//} else {
+		//	amPm = "AM"
+		//	hourString = d.getHours();
+		//}
 		
-		var currenttime = hourString + ":" + d.getMinutes() + " " + amPm;
-		//alert (currenttime);
+		//var currenttime = hourString + ":" + d.getMinutes() + " " + amPm;
+		//console.log(currenttime);
 		
 		//var json = JSON.parse(JSONdataSet);
-		for (i=0;i<JSONdataSet.length;i++){
-			if (JSONdataSet[i].time == "4:30 PM"){
-				alert(JSONdataSet[i].badgeID + "--" + JSONdataSet[i].punchType +"--"+ JSONdataSet[i].punch +"--"+ JSONdataSet[i].time);
-			};
-		}
+		//for (i=0;i<JSONdataSet.length;i++){
+		//	if (JSONdataSet[i].time == "4:30 PM"){
+		//		alert(JSONdataSet[i].badgeID + "--" + JSONdataSet[i].punchType +"--"+ JSONdataSet[i].punch +"--"+ JSONdataSet[i].time);
+		//	};
+		//}
 		//console.log(JSONdataSet[2].badgeID + "--" + JSONdataSet[2].punchType +"--"+ JSONdataSet[2].punch +"--"+ JSONdataSet[2].time);
-		});
+		//});
 
 	}
 	}, 10);
