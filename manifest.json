@@ -35,11 +35,17 @@
   "content_scripts": [
     {
       "matches": [
-		"http://*/*"
+		"http://km2.timetrak.com:85/*",
+		"http://12.168.15.20:85/web.exe/*",
+		"http://12.168.15.20:85/web.exe?sp2application=079950102ClocTrak",
+		"http://75.144.77.177:85/web.exe/*",
+		"http://75.144.77.177:85/web.exe?sp2application=079950102ClocTrak",
+		"http://km2.timetrak.com:85/web.exe?sp2application=079950102ClocTrak"
       ],
       "js": [
         "js/jquery/jquery.js", "src/inject/inject.js"
-      ]
+      ],
+	  "run_at": "document_end"
     }
   ]
 }

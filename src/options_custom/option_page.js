@@ -5,7 +5,9 @@ printStorageBody();
 });
 
 	//initiates bootstrap-timepicker
-	$('#datetimepicker1').timepicker({});
+	$('#datetimepicker1').timepicker({
+		defaultTime: 'current',
+	});
 
 	var dataSet;
 	var realdataSet;
