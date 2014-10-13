@@ -11,7 +11,7 @@ function onWebNav(details) {
     }]
 }; */
 
-//var refreshId = setInterval(function(){
+var refreshId = setInterval(function(){
 	console.log( "bg.js ready!" );
 	
 	var now    = new Date();
@@ -49,9 +49,9 @@ function onWebNav(details) {
 						sendResponse({}); // snub them.
 						}
 						if (request.method == 'donesubmitting'){
-						console.log("tab closed");
-						//chrome.tabs.remove(tab.id);
-					  }
+							console.log("tab closed");
+							chrome.tabs.remove(tab.id);
+						}
 					});
 					
 				});
@@ -61,5 +61,5 @@ function onWebNav(details) {
 		};
 	}
 
-//}, 5000);
+}, 5000);
 
