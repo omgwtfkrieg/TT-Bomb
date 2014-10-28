@@ -76,7 +76,7 @@ printStorageBody();
 				punch : $('#punchtype').val(),
 				time : $('.time').val(),
 				button: "<button class='delete btn btn-danger'><span class='glyphicon glyphicon-remove'></span></button>",
-				status: "yes"
+				status: "no"
 			};
 			realdataSet.push(newItem);
 			localStorage.setItem("realdataSet", JSON.stringify(realdataSet));   
