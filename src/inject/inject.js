@@ -19,12 +19,17 @@ chrome.extension.sendMessage({method: "getpunchdata"}, function(response) {
 				$(document).ready(function() {
 					
 					$("input[name*='MSG4']").val(badgeID);
-					//port.postMessage({didthis: "Badge ID entered"});
+					setTimeout( function(){
+						port.postMessage({didthis: "Badge ID entered"});
+					}, 1000); // delay 5000 ms
 				});
 			}else if (msg.dothis == "Submit Badge"){
 				$(document).ready(function() {
-					$("input[name=OK]").click();
-					port.postMessage({didthis: "Click submitted"});
+					setTimeout( function(){
+						$("input[name=OK]").click();
+						port.postMessage({didthis: "Click submitted"});
+					}, 1000); // delay 5000 ms
+
 				});
 			}else if (msg.dothis == "Was the punch accepted?"){
 				$(document).ready(function() {

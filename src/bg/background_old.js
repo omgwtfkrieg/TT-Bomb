@@ -11,7 +11,7 @@ function onWebNav(details) {
     }]
 }; */
 
-var refreshId = setInterval(function(){
+//var refreshId = setInterval(function(){
 	console.log( "bg.js ready!" );
 	
 	var now    = new Date();
@@ -127,7 +127,23 @@ var refreshId = setInterval(function(){
 					
 					
 					////////////////////////////////
-								
+					
+					
+					////////////////////////////////\\\\\\\\\\\\\\\\\\\\\\\\\\\\/
+					surprise(cb) {
+						(function loop() {
+							var now = new Date();
+							if (now.getDate() === 12 && now.getHours() === 12 && now.getMinutes() === 0) {
+								cb();
+							}
+							now = new Date();                  // allow for time passing
+							var delay = 60000 - (now % 60000); // exact ms to next minute interval
+							setTimeout(loop, delay);
+						})();
+					}
+					///////////////////////////////\\\\\\\\\\\\\\\\\\\\\\\\\\\\\/
+					
+					
 						
 					});
 								
