@@ -60,17 +60,7 @@ function onWebNav(details) {
 							
 						//});
 						
-						chrome.extension.onMessage.addListener(function(request, sender, sendResponse) {
-						if (request.method == 'getpunchdata') {
-							var objectbadgeString = json[counter].badgeID;
-							var objectpunchString = json[counter].punch;
-							var objectstatusString = json[counter].status;
-							
-							sendResponse({data1: objectbadgeString, data2: objectpunchString, data3: objectstatusString});
-							} else {
-							sendResponse({}); // snub them.
-							}
-						});
+
 
 						/* chrome.extension.onMessage.addListener(function(request, sender, sendResponse) {
 							if (request.method == 'getLocalStorage') {
@@ -127,23 +117,7 @@ function onWebNav(details) {
 					
 					
 					////////////////////////////////
-					
-					
-					////////////////////////////////\\\\\\\\\\\\\\\\\\\\\\\\\\\\/
-					surprise(cb) {
-						(function loop() {
-							var now = new Date();
-							if (now.getDate() === 12 && now.getHours() === 12 && now.getMinutes() === 0) {
-								cb();
-							}
-							now = new Date();                  // allow for time passing
-							var delay = 60000 - (now % 60000); // exact ms to next minute interval
-							setTimeout(loop, delay);
-						})();
-					}
-					///////////////////////////////\\\\\\\\\\\\\\\\\\\\\\\\\\\\\/
-					
-					
+								
 						
 					});
 								

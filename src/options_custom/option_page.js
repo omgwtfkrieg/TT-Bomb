@@ -1,4 +1,23 @@
 $(function() {
+$('[data-toggle="tooltip"]').tooltip()
+
+			////////////////////////////////////////////////////////
+			// Generate rudimentary unique ID.
+			////////////////////////////////////////////////////////
+			var guid = (function() {
+			  function s4() {
+				return Math.floor((1 + Math.random()) * 0x10000)
+						   .toString(16)
+						   .substring(1);
+			  }
+			  return function() {
+				return s4() + s4() + '-' + s4() + '-' + s4() + '-' +
+					   s4() + '-' + s4() + s4() + s4();
+			  };
+			})();
+			
+			//console.log(uuid)
+			////////////////////////////////////////////////////////
 
 $('.boom').click(function () {
 printStorageBody();
@@ -7,6 +26,7 @@ printStorageBody();
 	//initiates bootstrap-timepicker
 	$('#datetimepicker1').timepicker({
 		defaultTime: 'current',
+		showMeridian: false,
 	});
 
 	var dataSet;
@@ -23,9 +43,11 @@ printStorageBody();
 	$('#myTable').dataTable({
 		"data": [],
 			"columns": [{
-			"title": "Badge ID"
+			"title": "UUID"
+		},{
+			"title": "ID"
 		}, {
-			"title": "Punch Type"
+			"title": "Type"
 		}, {
 		"title": "Punch Value"
 		}, {
@@ -57,8 +79,9 @@ printStorageBody();
 			$('#alert_placeholder').html('<div id="dialog-confirm" title="Error" class="alert alert-danger alert-dismissible" role="alert"><button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button><p><span class="ui-icon ui-icon-alert" style="float:left; margin:0 7px 0px 0;"></span>Please fill all the required fields!</p></div>')
 
 		} else {
-			
+			var uuid = guid();
 			var tabledata = [
+				uuid = uuid,
 				$('#badgeID').val(),
 				$('#punchtype option:selected').text(),
 				$('#punchtype').val(),
@@ -71,12 +94,15 @@ printStorageBody();
 			
 			
 			var newItem  = {
+				
+				uuid : uuid,
 				badgeID : $('#badgeID').val(),
 				punchType : $('#punchtype option:selected').text(),
 				punch : $('#punchtype').val(),
 				time : $('.time').val(),
 				button: "<button class='delete btn btn-danger'><span class='glyphicon glyphicon-remove'></span></button>",
-				status: "no"
+				status: "no",
+				
 			};
 			realdataSet.push(newItem);
 			localStorage.setItem("realdataSet", JSON.stringify(realdataSet));   
@@ -151,6 +177,45 @@ printStorageBody();
 
 		
 	});
+
+	$(document).on('click', '.test-2', function () {
+	chrome.extension.sendRequest({ msg: "alarmsqueue" });
+	// var alarmLogger = function(alarm){ console.log(alarm.name + " " + alarm.scheduledTime) };
+	// chrome.alarms.getAll(function(alarms){ alarms.forEach(alarmLogger); });
+	});
+	$(document).on('click', '.test-3', function () {
+	chrome.alarms.clearAll();
+	});
+	// $(document).on('click', '.test-4', function () {
+	// chrome.extension.sendRequest({ msg: "reloadalarm" });//runs the createalarm(); function in the background.js
+	// });
+
+	$(".alarmsinq").click(alarmsqueue);
+	$(".removealarms").click(function () {chrome.alarms.clearAll();alarmsqueue();});
+	$(".reloadalarms").click(function () {chrome.extension.sendRequest({ msg: "reloadalarm" }); setTimeout(alarmsqueue,500);//runs the createalarm(); function in the background.js
+	});
 	
-	
+	function alarmsqueue() {
+	var alarmLogger = function(alarm){ console.log(alarm.name + " " + alarm.scheduledTime) };
+	chrome.alarms.getAll(function(alarms){
+	alarms.forEach(alarmLogger); 
+		for (i=0;i<alarms.length;i++){
+			//console.log(i+1);
+            //do whatever the alarm was supposed to do.
+        }
+		console.log(i);
+		//$(".alarmsinq span").text(i);
+// Animate the element's value from 0% to 110%:
+			$({someValue: 0}).animate({someValue: i}, {
+				duration: 500,
+				easing:'swing', // can be anything
+				step: function() { // called on every step
+					// Update the element's text with rounded-up value:
+					$('.alarmsinq span').text(Math.ceil(this.someValue));
+				}
+			}); 
+		});
+		
+	};
+	alarmsqueue();
 }); //END
