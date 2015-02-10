@@ -11,8 +11,8 @@ $('[data-toggle="tooltip"]').tooltip()
 						   .substring(1);
 			  }
 			  return function() {
-				return s4() + s4() + '-' + s4() + '-' + s4() + '-' +
-					   s4() + '-' + s4() + s4() + s4();
+				return s4() + '-' + s4() + '-' + s4() + '-' +
+					   s4() + '-' + s4();
 			  };
 			})();
 			
@@ -49,7 +49,7 @@ printStorageBody();
 		}, {
 			"title": "Type"
 		}, {
-		"title": "Punch Value"
+		"title": "Value"
 		}, {
 			"title": "Time"
 		}, {
@@ -106,8 +106,9 @@ printStorageBody();
 			};
 			realdataSet.push(newItem);
 			localStorage.setItem("realdataSet", JSON.stringify(realdataSet));   
+			chrome.extension.sendRequest({ msg: "reloadalarm" }); setTimeout(alarmsqueue,1000);//runs the createalarm(); function in the background.js
 			$('#addpunchmodal').modal('hide')		
-
+			
 		}
 	
 	
@@ -191,8 +192,9 @@ printStorageBody();
 	// });
 
 	$(".alarmsinq").click(alarmsqueue);
-	$(".removealarms").click(function () {chrome.alarms.clearAll();alarmsqueue();});
-	$(".reloadalarms").click(function () {chrome.extension.sendRequest({ msg: "reloadalarm" }); setTimeout(alarmsqueue,500);//runs the createalarm(); function in the background.js
+	$(".removealarms").click(function () {chrome.extension.sendRequest({ msg: "clearalarms" }); chrome.alarms.clearAll(); setTimeout(alarmsqueue,1000);//runs the createalarm(); function in the background.js
+	});
+	$(".reloadalarms").click(function () {chrome.extension.sendRequest({ msg: "createalarm" }); setTimeout(alarmsqueue,1000);//runs the createalarm(); function in the background.js
 	});
 	
 	function alarmsqueue() {

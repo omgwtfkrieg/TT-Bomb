@@ -24,7 +24,6 @@ function onWebNav(details) {
 //}, 1000)
 //var refreshId = setInterval(function(){
 var currenttime;
-var json = JSON.parse(localStorage.getItem("realdataSet"));
 
 /////////////////////////////////////////
 // Notifications
@@ -55,8 +54,11 @@ notifyMe();//runs the notifyMe function and shows notification to display when t
 ////////////////////////////////////////
 // Alarm
 ////////////////////////////////////////
-
+var json = JSON.parse(localStorage.getItem("realdataSet"));
 function createAlarm() {
+	json = JSON.parse(localStorage.getItem("realdataSet"));
+
+	chrome.alarms.clearAll();
 	var alarmcounter = 0;
 	for (i=0;i<json.length;i++){ //will go through all the data array in the json file
 		
@@ -68,10 +70,10 @@ function createAlarm() {
 			
 			var now = new Date();
 			var day = now.getDate();
-			if (now.getHours() >= tt[0] && now.getMinutes >= tt[1]) {
+		/* 	if (now.getHours() >= tt[0] && now.getMinutes >= tt[1]) {
 				// If the punch already passed sets to try next day
 				day += 1;
-			}
+			} */
 			// '+' casts the date to a number, like [object Date].getTime();
 			var timestamp = +new Date(now.getFullYear(), now.getMonth(), day, tt[0], tt[1], 0, 0);
 			//                        YYYY               MM              DD    HH     MM   SS MS
@@ -110,7 +112,8 @@ function createAlarm() {
 
 	};
 	//getallalarms(); //calls the getallarms() function which shows the current punches in queue
-}//End of createAlarm
+	console.log("Alarms created");
+};//End of createAlarm
 createAlarm();
 
 			 // chrome.alarms.getAll(function(alarms){
@@ -173,7 +176,7 @@ createAlarm();
 							//listens to the tab recently created by ID and makes sure to add the inject.js
 							//including the jquery library every time it changes/updates etc...
 							chrome.tabs.onUpdated.addListener(function(tabID, info, tab) {
-							chrome.tabs.executeScript(tab.id, { file: 'js/jquery/jquery.min.js', runAt : 'document_start' }, function(tab) {
+							chrome.tabs.executeScript(tab.id, { file: 'src/options_custom/jquery-1.11.1.min.js', runAt : 'document_start' }, function(tab) {
 
 								chrome.tabs.executeScript(tabID, { 
 									file : 'src/inject/inject.js',
@@ -270,12 +273,16 @@ createAlarm();
 				});
 				
 			//});
-			
+	
+	function clearalarms() {chrome.alarms.clearAll();};
+	
 	chrome.extension.onRequest.addListener(
     function(request, sender, sendResponse){
-        if(request.msg == "reloadalarm") {createAlarm();getallalarms();}; //runs the createalarm(); function from open_page.js
+		if(request.msg == "createalarm") {createAlarm(); getallalarms();};
+        if(request.msg == "reloadalarm") {chrome.alarms.clearAll(); getallalarms();}; //runs the createalarm(); function from open_page.js
 		
 		if(request.msg == "alarmsqueue"){getallalarms();};
+		if(request.msg == "clearalarms"){clearalarms();};
 		//if(request.msg == "alarmsqueue"){getallalarms();};
     }
 	);
