@@ -1,5 +1,5 @@
 $(function() {
-$('[data-toggle="tooltip"]').tooltip()
+//$('[data-toggle="tooltip"]').tooltip()
 
 			////////////////////////////////////////////////////////
 			// Generate rudimentary unique ID.
@@ -18,16 +18,36 @@ $('[data-toggle="tooltip"]').tooltip()
 			
 			//console.log(uuid)
 			////////////////////////////////////////////////////////
+	$('.clockpicker').clockpicker({donetext: 'Done',autoclose: true,align: 'right',});
+			
+	//$('.addnothing').hide();
+	$('#addnothing').click(function() {
+		$('.addnothing').animate({
+			height: 'toggle'
+			}, 500
+		);
+     });
+	 $('#addnothingclose').click(function() {
+		$('.addnothing').animate({
+			height: 'toggle'
+			}, 500
+		);
+     });
+	$('.addnothing').show
+    // Initializes modal
+    $('.modal-trigger').leanModal();
+	// Initializes Option drop down
+	$('select').material_select();
 
-$('.boom').click(function () {
-printStorageBody();
-});
+	$('.boom').click(function () {
+	printStorageBody();
+	});
 
 	//initiates bootstrap-timepicker
-	$('#datetimepicker1').timepicker({
-		defaultTime: 'current',
-		showMeridian: false,
-	});
+	// $('#datetimepicker1').timepicker({
+		// defaultTime: 'current',
+		// showMeridian: false,
+	// });
 
 	var dataSet;
 	var realdataSet;
@@ -73,10 +93,10 @@ printStorageBody();
 
 	//saves entry to localStorage
 	$('#Save').click(function () {
-		
+		console.log($('#badgeID').val() + $('#punchtype').val() + $('#timepicker').val());
 		//checks modal if input fields are not empty, if they are it will show an alert message
 		if ($('#badgeID').val() == '' || $('#punchtype select option:selected').val() == '' || $('.time').val() == '') {
-			$('#alert_placeholder').html('<div id="dialog-confirm" title="Error" class="alert alert-danger alert-dismissible" role="alert"><button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button><p><span class="ui-icon ui-icon-alert" style="float:left; margin:0 7px 0px 0;"></span>Please fill all the required fields!</p></div>')
+			$('#alert_placeholder').html('<p class="flow-text red-text text-darken-1" id="alert_placeholder"><i class="small mdi-alert-warning yellow-text text-darken-2" style="float:left; margin:0 7px 0px 0;"></i>You missed a field!</p>')
 
 		} else {
 			var uuid = guid();
@@ -85,8 +105,8 @@ printStorageBody();
 				$('#badgeID').val(),
 				$('#punchtype option:selected').text(),
 				$('#punchtype').val(),
-				$('.time').val(),
-				"<button class='delete btn btn-danger'><span class='glyphicon glyphicon-remove'></span></button>"
+				$('#timepicker').val(),
+				"<button class='delete btn waves-effect waves-light red'><span class='mdi-action-highlight-remove'></span></button>"
 			];
 			oTable.row.add(tabledata).draw();
 			dataSet.push(tabledata);
@@ -100,30 +120,30 @@ printStorageBody();
 				punchType : $('#punchtype option:selected').text(),
 				punch : $('#punchtype').val(),
 				time : $('.time').val(),
-				button: "<button class='delete btn btn-danger'><span class='glyphicon glyphicon-remove'></span></button>",
+				button: "<button class='delete btn waves-effect waves-light red'><span class='mdi-action-highlight-remove'></span></button>",
 				status: "no",
 				
 			};
 			realdataSet.push(newItem);
 			localStorage.setItem("realdataSet", JSON.stringify(realdataSet));   
 			chrome.extension.sendRequest({ msg: "reloadalarm" }); setTimeout(alarmsqueue,1000);//runs the createalarm(); function in the background.js
-			$('#addpunchmodal').modal('hide')		
+			//$('#addpunchmodal').modal('hide')		
 			
 		}
 	
 	
 	});
-	$('#addpunchmodal').on('shown.bs.modal', function (e) {
-		$('#datetimepicker1').timepicker({});
-		$('#badgeID').attr({ maxLength : 5 });
-	})
+	//$('#addpunchmodal').on('shown.bs.modal', function (e) {
+	//	$('#datetimepicker1').timepicker({});
+	//	$('#badgeID').attr({ maxLength : 5 });
+	//})
 	
-	$('#addpunchmodal').on('hidden.bs.modal', function (e) {
-		$('badgeID').val('');
-		$('punchtype').val('');
-		$(this).prop('checked', false);
-		$(".alert").alert('close')
-	})
+	//$('#addpunchmodal').on('hidden.bs.modal', function (e) {
+	//	$('badgeID').val('');
+	//	$('punchtype').val('');
+	//	$(this).prop('checked', false);
+	//	$(".alert").alert('close')
+	//})
 	
 	$(document).on('click', '.delete', function () {
 		var index = $(this).closest('tr').attr('id').split('-')[1];
@@ -192,7 +212,7 @@ printStorageBody();
 	// });
 
 	$(".alarmsinq").click(alarmsqueue);
-	$(".removealarms").click(function () {chrome.extension.sendRequest({ msg: "clearalarms" }); chrome.alarms.clearAll(); setTimeout(alarmsqueue,1000);//runs the createalarm(); function in the background.js
+	$(".removealarms").click(function () {chrome.extension.sendRequest({ msg: "clearalarms" }); setTimeout(alarmsqueue,1000);//runs the clearalarm(); function in the background.js
 	});
 	$(".reloadalarms").click(function () {chrome.extension.sendRequest({ msg: "createalarm" }); setTimeout(alarmsqueue,1000);//runs the createalarm(); function in the background.js
 	});

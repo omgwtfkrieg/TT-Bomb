@@ -70,10 +70,10 @@ function createAlarm() {
 			
 			var now = new Date();
 			var day = now.getDate();
-		/* 	if (now.getHours() >= tt[0] && now.getMinutes >= tt[1]) {
+			if (now.getHours() > tt[0] ) {
 				// If the punch already passed sets to try next day
 				day += 1;
-			} */
+			}
 			// '+' casts the date to a number, like [object Date].getTime();
 			var timestamp = +new Date(now.getFullYear(), now.getMonth(), day, tt[0], tt[1], 0, 0);
 			//                        YYYY               MM              DD    HH     MM   SS MS
@@ -136,14 +136,14 @@ createAlarm();
 						//do whatever the alarm was supposed to do.
 						if(alarms.length === 1){var punchsinplu = "Nothing™";
 						}else{punchsinplu = "Nothings™"};
-						  var notification2 = new Notification('Well, fuck!', {
+						var notification2 = new Notification('Well, fuck!', {
 							icon: 'icons/icon48.png',
 							body: alarms.length + " " + punchsinplu + " to run.",
-						  });
+						});
 						  
-							setTimeout(function(){
-								notification2.close();
-							}, 3000); 
+						setTimeout(function(){
+							notification2.close();
+						}, 3000); 
 					//}
 				});
 			};	
@@ -274,7 +274,18 @@ createAlarm();
 				
 			//});
 	
-	function clearalarms() {chrome.alarms.clearAll();};
+	function clearalarms() {
+		
+		var notification5 = new Notification('Finally!', {
+			icon: 'icons/icon48.png',
+			body: "Nothing™ to run",
+		});
+						  
+		setTimeout(function(){
+			notification5.close();
+		}, 3000); 
+		chrome.alarms.clearAll();
+	};
 	
 	chrome.extension.onRequest.addListener(
     function(request, sender, sendResponse){
