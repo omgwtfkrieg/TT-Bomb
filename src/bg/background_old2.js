@@ -1,22 +1,10 @@
-//Show page action icon in omnibar if it matches the URL specified
-// function checkForValidUrl(tabId, changeInfo, tab) {
-
-//   If  'example.com' is the hostname for the tabs url.
-   // var a = document.createElement ('a');
-   // a.href = tab.url;
-   // if (a.hostname == "http://km2.timetrak.com:85/web.exe") {
-//       ... show the page action.
-       // chrome.pageAction.show(tabId);
-//	   alert("timetrak web is opened");
-		
-   // }
-// };
-//Listen for any changes to the URL of any tab.
-// chrome.tabs.onUpdated.addListener(checkForValidUrl);
-//For highlighted tab as well
-// chrome.tabs.onHighlighted.addListener(checkForValidUrl);
-
-
+// Show page action icon in omnibar.
+function onWebNav(details) {
+    if (details.frameId === 0) {
+        // Top-level frame
+        chrome.pageAction.show(details.tabId);
+    }
+}
 
 var currenttime;
 
@@ -161,7 +149,46 @@ function getallalarms() {
 							
 							////////////////////////////////
 										
+										chrome.runtime.onConnect.addListener(function(port) {
+											console.assert(port.name == "injectscript");
+											port.onMessage.addListener(function(msg) {
+												if (msg.pagestate == "PageReady"){
+													port.postMessage({dothis: "Selecting type of Punch"});
+													console.log( "Timetrak Tab loaded" );
+												}else if (msg.didthis == "Punch Type selected"){
+													port.postMessage({dothis: "Enter Badge ID"});
+													console.log( "Punch Type entered" );
+												}else if (msg.didthis == "Badge ID entered"){
+													port.postMessage({dothis: "Submit Badge"});
+													console.log( "Badge ID entered" );
+												}else if (msg.didthis == "Click submitted"){
+													console.log( "Click submitted" );
+													port.postMessage({dothis: "Was the punch accepted?" });
+												}else if (msg.didthis == "Accepted was found"){
+													var punchstatus = json[counter].status;
+													json[counter].status = "yes";
+													localStorage.setItem('dataSet', JSON.stringify(json));
+													console.log(punchstatus);
 
+													//setTimeout( function(){
+														console.log("Punch Accepted closing tab");
+														
+														chrome.tabs.remove(tab.id);									
+													//}, 1000); // delay 5000 ms
+													
+												}else if (msg.didthis == "punch already ran"){
+													//setTimeout( function(){
+														console.log("closing tab");
+														
+														chrome.tabs.remove(tab.id);
+													//}, 7000); // delay 5000 ms
+												}else if (msg.didthis == "Close Tab"){
+													console.log( "Closing Tab" );
+													chrome.tabs.remove(tabID);
+
+												}
+											});
+										});
 									
 									
 							////////////////////////////////
@@ -208,83 +235,12 @@ function getallalarms() {
 		chrome.alarms.clearAll();
 	};
 	
-	// chrome.extension.onRequest.addListener(
-		// function(request, sender, sendResponse){
-		// }else if(request.msg == "createalarm") {
-			// createAlarm(); getallalarms();
-		// }else if(request.msg == "reloadalarm") {
-			// chrome.alarms.clearAll();
-			// getallalarms(); //runs the createalarm(); function from open_page.js
+	chrome.extension.onRequest.addListener(
+		function(request, sender, sendResponse){
+			if(request.msg == "createalarm") {createAlarm(); getallalarms();};
+			if(request.msg == "reloadalarm") {chrome.alarms.clearAll(); getallalarms();}; //runs the createalarm(); function from open_page.js
 			
-		// }else if(request.msg == "alarmsqueue"){
-			// getallalarms();
-		// }else if(request.msg == "clearalarms"){
-			// clearalarms();
-		// }
-	// );
-	
-///////////////////////////////////////////////////////////
-// Communication section between option_page.js and background.js
-///////////////////////////////////////////////////////////
-
-chrome.runtime.onConnect.addListener(function(port1) {
-	console.assert(port.name == "fromoptionpagescript");
-	port.onMessage.addListener(function(msg) {
-		if (requestaction.msg == "getalarmsnumber") {
-			//createAlarm(); getallalarms();
-			alert("received");
-		}else if(request.msg == "reloadalarm") {
-			chrome.alarms.clearAll();
-			getallalarms(); //runs the createalarm(); function from open_page.js
-			
-		}else if(request.msg == "alarmsqueue"){
-			getallalarms();
-		}else if(request.msg == "clearalarms"){
-			clearalarms();
+			if(request.msg == "alarmsqueue"){getallalarms();};
+			if(request.msg == "clearalarms"){clearalarms();};
 		}
-	});
-});
-
-///////////////////////////////////////////////////////////
-// Communication section between background.js and content script inject.js
-///////////////////////////////////////////////////////////
-
-//Ready to listen for inject.js for any request
-chrome.runtime.onConnect.addListener(function(port2) {
-	console.assert(port2.name == "tofrominjectscript");
-	port2.onMessage.addListener(function(msg) {
-		if (msg.pagestate == "PageReady"){
-			port.postMessage({dothis: "Selecting type of Punch"});
-			console.log( "Timetrak Tab loaded" );
-		}else if (msg.didthis == "Punch Type selected"){
-			port.postMessage({dothis: "Enter Badge ID"});
-			console.log( "Punch Type entered" );
-		}else if (msg.didthis == "Badge ID entered"){
-			port.postMessage({dothis: "Submit Badge"});
-			console.log( "Badge ID entered" );
-		}else if (msg.didthis == "Click submitted"){
-			console.log( "Click submitted" );
-			port.postMessage({dothis: "Was the punch accepted?" });
-		}else if (msg.didthis == "Accepted was found"){
-			var punchstatus = json[counter].status;
-			json[counter].status = "yes";
-			localStorage.setItem('dataSet', JSON.stringify(json));
-			console.log(punchstatus);
-			//setTimeout( function(){
-			console.log("Punch Accepted closing tab");
-			chrome.tabs.remove(tab.id);									
-			//}, 1000); // delay 5000 ms
-
-		}else if (msg.didthis == "punch already ran"){
-			//setTimeout( function(){
-			console.log("closing tab");
-																	
-			chrome.tabs.remove(tab.id);
-		//}, 7000); // delay 5000 ms
-		}else if (msg.didthis == "Close Tab"){
-			console.log( "Closing Tab" );
-			chrome.tabs.remove(tabID);
-		}
-	});
-});
-///////////////////////////////////////////
+	);

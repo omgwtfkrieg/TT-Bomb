@@ -7,9 +7,9 @@ chrome.extension.sendMessage({method: "getpunchdata"}, function(response) {
 	
 	//var foundin = $('*:contains("Honduras KM2")');
 	
-	var port = chrome.runtime.connect({name: "injectscript"});
-	port.postMessage({pagestate: "PageReady"});
-	port.onMessage.addListener(function(msg) {
+	var port2 = chrome.runtime.connect({name: "tofrominjectscript"});
+	port2.postMessage({pagestate: "PageReady"});
+	port2.onMessage.addListener(function(msg) {
 	
 		$('*:contains("Honduras KM2")').each(function(){
 		 if($(this).children().length < 1) 
@@ -34,11 +34,11 @@ chrome.extension.sendMessage({method: "getpunchdata"}, function(response) {
 			$("input[name=OK]").click();
 		};
 		$('*:contains("Your Session Has Terminated - Please Close Your Browser")').each(function(){
-			port.postMessage({didthis: "Close Tab"});
+			port2.postMessage({didthis: "Close Tab"});
 		});
 		
 		$('*:contains("Accepted")').each(function(){
-			port.postMessage({didthis: "Accepted was found"});
+			port2.postMessage({didthis: "Accepted was found"});
 		});
 
 		
