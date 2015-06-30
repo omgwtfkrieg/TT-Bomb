@@ -114,12 +114,12 @@ $(function() {
 		//alert(index);
 		var row = $(this).closest('tr');
 		
-		//reloads/updates datatables with new values
+		// reloads/updates datatables with new values
 		oTable.row(row).remove().draw();
-		//grabs the uuid from the first cell and stores it in "getuuid"
+		// grabs the uuid from the first cell and stores it in "getuuid"
 		var getuuid = $(this).parent().siblings(":first").text();
 		
-		//once we get the uuid we pull our dataSet in local storage and search for the value to delete
+		// once we get the uuid we pull our dataSet in local storage and search for the value to delete
 		var json = JSON.parse(localStorage["dataSet"]);
 		for (i=0;i<json.length;i++)
 		if (json[i].uuid == getuuid) json.splice(i,1);
@@ -127,7 +127,7 @@ $(function() {
 		
 
 	});
-	//close button action, will hide and reset values from the addnothing form
+	// close button action, will hide and reset values from the addnothing form
 	$('#addnothingclose').click(function () {
 		$('.addnothing').fadeToggle( "fast", "linear" );
 		$('#addpunchinqueue')[0].reset();
@@ -138,16 +138,19 @@ $(function() {
 	chrome.alarms.clearAll();
 	});
 
-	$(".alarmsinq").click(function (){alarmsqueue();});
-	$(".removealarms").click(function () {chrome.extension.sendRequest({ msg: "clearalarms" }); //runs the clearalarm(); function in the background.js
+	//$(".alarmsinq").click(function (){alarmsqueue();});
+
+	$('.getalarms').click(function () {//chrome.extension.sendRequest({ msg: "createalarm" }); //runs the createalarm(); function in the background.js
+		//chrome.runtime.sendMessage({ msg: "createalarm" });
+		port.postMessage({joke: "Knock knock"});
+		$('.getalarms i').addClass('spin');	
 	});
-	$('.reloadalarms').click(function () {//chrome.extension.sendRequest({ msg: "createalarm" }); //runs the createalarm(); function in the background.js
-		var port1 = chrome.runtime.connect({name: "fromoptionpagescript"});
-		port1.postMessage({requestaction: "getalarmsnumber"});
-		port1.onMessage.addListener(function(msg) {
-			port1.postMessage({didthis: "Find amnt alarms"});
-			});
-		$('.reloadalarms i').addClass('spin');	
+	$(".addalarms").click(function () {//chrome.extension.sendRequest({ msg: "clearalarms" }); //runs the clearalarm(); function in the background.js
+		port.postMessage({answer: "Create Alarms"});
+	});
+	
+	$(".removealarms").click(function () {//chrome.extension.sendRequest({ msg: "clearalarms" }); //runs the clearalarm(); function in the background.js
+		port.postMessage({answer: "Remove Alarms"});
 	});
 	
 	//<--end-->
@@ -176,17 +179,27 @@ $(function() {
 	///////////////////////////////////////////////////////////
 	// Communication section between Option_Page and Background
 	///////////////////////////////////////////////////////////
-	
-	//Listener
-	chrome.extension.onRequest.addListener(
-		function(request, sender, sendResponse){
-
-			if(request.elementaction == "btnstopspinning"){
-				$('.reloadalarms i').removeClass('spin');
-				console.log("Stopping button animation");
-			};
-
+	// Sender
+	var port = chrome.runtime.connect({name: "knockknock"});
+	port.onMessage.addListener(function(msg) {
+		if (msg.question == "Who's there?"){
+		//Stops the spinning animation from the reload/refresh button
+			$('.getalarms i').removeClass('spin');	
 		}
-	);
+	else if (msg.question == "Madame who?")
+		port.postMessage({answer: "Madame... Bovary"});
+	});
+	// Listener
+	
+	// chrome.runtime.onMessage.addListener(
+		// function(request, sender, sendResponse){
+			// if(request.msg == "createalarm") {createAlarm(); getallalarms();};
+			// if(request.msg == "reloadalarm") {chrome.alarms.clearAll(); getallalarms();}; //runs the createalarm(); function from open_page.js
+			
+			// if(request.msg == "alarmsqueue"){getallalarms();};
+			// if(request.msg == "clearalarms"){clearalarms();};
+		// }
+	// );
+	
 
 }); //END
