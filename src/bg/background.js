@@ -17,30 +17,49 @@
 // chrome.tabs.onHighlighted.addListener(checkForValidUrl);
 
 
-function getQuote() {
-	
-	function randomFrom(arr){
-    var randomIndex = Math.floor(Math.random() * arr.length);
-    return arr[randomIndex];
-}
-
-         var quotes = new Array("I pity the FOOL!", 
-         "I aint gettin on no plane!", 
-         "Quit yo Jibba Jabba!", 
-         "Shut up, fool!", 
-         "Life's tough, but I'm tougher!", 
-         "Do some prep!",
-         "I'm on a real short leash here", 
-         "Don't make me mad, Arrr!", 
-         "You're gonna meet my friend, PAIN!",
-         "You aint hurt, you pathetic!");
-
-         var randomChoice = Math.floor(Math.random()* quotes.length)         
-
-        // return randomChoice;
-
-      }
-
+var messages = [     
+			"Life is too short to remove USB safely", 
+			"If we're not meant to have midnight snacks, why is there a light in the fridge?", 
+			"Nothing poisons life more than potassium cyanide", 
+			"1/7 of our lives are Mondays.", 
+			"Life's tough, but I'm tougher!", 
+			"Don't drink while driving – you will spill the beer.",
+			"If you love a woman, you shouldn't be ashamed to show her to your wife.", 
+			"I feel like Tampax – at a good place, but wrong time…", 
+			"Team work is important; it helps to put the blame on someone else.",
+			"It doesn't matter how much you work, there will always be an asshole that works less but gets more.",
+			"Accept who you are, unless you're a serial killer",
+			"Brains are wonderful, I wish everyone had one.",
+			"A person has to have a warm heart and a cold beer.",
+			"Virginity is curable.",
+			"I'm not sad. I'm sober…",
+			"Friends come and go. Enemies pile up.",
+			"Learn from your parents mistakes – use a condom!",
+			"If you want to hide your face, go out naked.",
+			"If you can't buy a person, you can always sell him.",
+			"Life is beautiful… from Friday to Monday.",
+			"I don't think you are stupid. You just have a bad luck when thinking.",
+			"I tried to be normal once. Worst two minutes of my life.",
+			"May your coffee be strong and your Monday be short.",
+			"Out of all the lies I\'ve told, \"Just kidding!\" is my favorite.",
+			"People say nothing is impossible, but I do nothing every day.",
+			"I put the pro in procrastinate",
+			"It's all fun and games, until someone calls the cops. Then it's a new game; hide and seek",
+			"I'm great in bed; I can sleep for days",
+			"Silence is golden; duct tape is silver",
+			"A good friend will help you move, a best friend will help you move a dead body",
+			"Trying to understand you is like trying to smell the color 9",
+			"Anything that is unrelated to elephants is irrelephant",
+			"Most people are only alive because it's illegal to shoot them",
+			"If God made everything, then God must be Chinese?",
+			"Some people are like Slinky's. Pretty much useless but make you smile when you push them down the stairs. :)",
+			"Never argue with an idiot they'll drag you down to their level and beat you through experience"
+			];
+			
+		function getMessages() {
+			return messages[Math.floor(Math.random() * messages.length)];
+		};
+			
 
 var currenttime;
 
@@ -55,7 +74,7 @@ function notifyMe() {
   if (Notification.permission !== "granted")
     Notification.requestPermission();
 
-  var notification = new Notification(getQuote(), {
+  var notification = new Notification(getMessages(), {
     icon: 'icons/icon48.png',
     body: "π-Bomb was loaded.",
   });
@@ -111,22 +130,40 @@ notifyMe();//runs the notifyMe function and shows notification to display when t
 		//getallalarms(); //calls the getallarms() function which shows the current smashes in queue
 		console.log("Alarms created");
 		//getallalarms();
-		var notification3 = new Notification(getQuote, {
+		var notification3 = new Notification(getMessages(), {
 			icon: 'icons/icon48.png',
 			body: 'Added smashes to the queue...',
 		});
 		setTimeout(function(){
 			notification3.close();
-		}, 3000); 
+		}, 3000);
+		
+		chrome.notifications.create('report',{
+		  type:'basic',
+		  title:'Smashes added to the queue...',
+		  iconUrl: 'icons/icon48.png',
+		  message: getMessages(),
+		  expandedMessage:'Hello thanks for using our app',
+		  priority:1,
+		  buttons:[{title:'Follow URL'},{title:'Remind me Later'}],
+		  isClickable:true
+		},function(){});
+		setTimeout(function(){
+			chrome.notifications.clear('report')
+		}, 3000);
+		chrome.experimental.notification.onClicked.addListener(notClicked);
 					//console.log(alarm.name);
 	};//End of createAlarm
 	createAlarm(); // Initializes function on app load
-
+	
+	function notClicked(notID) {
+	   console.log("The notification '" + notID + "' was clicked");
+	}
 	
 				chrome.alarms.onAlarm.addListener(function( alarm ) {
 					console.log("Alarm was found and executed, it punched.!", alarm);
 				  
-					var notification3 = new Notification(getQuote, {
+					var notification3 = new Notification(getMessages(), {
 						icon: 'icons/icon48.png',
 						body: 'Running your nothingness...',
 					});
@@ -134,7 +171,7 @@ notifyMe();//runs the notifyMe function and shows notification to display when t
 						notification3.close();
 					}, 3000); 
 					console.log(alarm.name);
-					//checkitemdate();
+					//checkgetMessagesdate();
 					///////////////////////////////////////////////////////////
 					///////////////////////////////////////////////////////////
 					for (i=0;i<json.length;i++){ //will go through all the data array in the json file
@@ -249,7 +286,7 @@ console.assert(port.name == "knockknock");
 		chrome.alarms.getAll(function(alarms){
 			if(alarms.length === 1){var punchsinplu = "Nothing™";
 			}else{punchsinplu = "Nothings™"};
-			var notification2 = new Notification(getQuote, {
+			var notification2 = new Notification(getMessages(), {
 				icon: 'icons/icon48.png',
 				body: alarms.length + " " + punchsinplu + " to run.",
 			});
@@ -269,7 +306,7 @@ console.assert(port.name == "knockknock");
 	// Clears all alarms in queue
 	function clearAlarms() {
 		
-		var notification5 = new Notification(getQuote, {
+		var notification5 = new Notification(getMessages(), {
 			icon: 'icons/icon48.png',
 			body: "Nothing™ to run",
 		});

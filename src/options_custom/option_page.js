@@ -200,6 +200,37 @@ $(function() {
 			// if(request.msg == "clearalarms"){clearalarms();};
 		// }
 	// );
-	
+	$('.testbutton').click(function () {
+		// var items = Array(     
+			// "I pity the FOOL!", 
+			// "I aint gettin on no plane!", 
+			// "Quit yo Jibba Jabba!", 
+			// "Shut up, fool!", 
+			// "Life's tough, but I'm tougher!", 
+			// "Do some prep!",
+			// "I'm on a real short leash here", 
+			// "Don't make me mad, Arrr!", 
+			// "You're gonna meet my friend, PAIN!",
+			// "You aint hurt, you pathetic!",
+			// "Accept who you are, unless you’re a serial killer",
+			// "I tried to be normal once. Worst two minutes of my life.",
+			// "May your coffee be strong and your Monday be short.",
+			// "Out of all the lies I\'ve told, \"Just kidding!\" is my favorite.",
+			// "People say nothing is impossible, but I do nothing every day.",
+			// "I put the pro in procrastinate",
+			// "It’s all fun and games, until someone calls the cops. Then it’s a new game; hide and seek",
+			// "I’m great in bed; I can sleep for days",
+			// "Silence is golden; duct tape is silver",
+			// "A good friend will help you move, a best friend will help you move a dead body",
+			// "Trying to understand you is like trying to smell the color 9",
+			// "Anything that is unrelated to elephants is irrelephant",
+			// "Most people are only alive because it’s illegal to shoot them",
+			// "If God made everything, then God must be Chinese?",
+			// "Some people are like Slinky’s. Pretty much useless but make you smile when you push them down the stairs. :)",
+			// "Never argue with an idiot they’ll drag you down to their level and beat you through experience"
+			// );
+		// var item = items[Math.floor(Math.random()*items.length)];
+		// alert(item);
+	});
 
 }); //END
