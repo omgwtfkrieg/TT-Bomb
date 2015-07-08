@@ -170,8 +170,8 @@ $(function() {
 	});
 	$('.clockpicker').clockpicker({donetext: 'Done',autoclose: true,align: 'right',});//initialize the clock picker in the time input box
 	$('select').material_select();//initialize the select option for materialize
-	$('#badgeID').keyup(function() {//enables the save button once smash ID meets the 4 character long criteria
-		if($(this).val().length == 4 ) {
+	$('#badgeID').keyup(function() {//enables the save button once smash ID meets the 5 character long criteria
+		if($(this).val().length == 5 ) {
 			$('#Save').prop("disabled", false);
 		}
 	});	
