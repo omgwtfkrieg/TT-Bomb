@@ -110,17 +110,17 @@ function createAlarm() {
 		var now = new Date();
 		var day = now.getDate();
 		if (now.getHours() > tt[0] ) {
-			// If the punch already passed sets to try next day
+			// If the smash already passed sets to try next day
 			day += 1;
 		}
 			// '+' casts the date to a number, like [object Date].getTime();
 		var timestamp = +new Date(now.getFullYear(), now.getMonth(), day, tt[0], tt[1], 0, 0);
 				//                        YYYY               MM              DD    HH     MM   SS MS
-				//console.log("We found something to punch");
+				//console.log("We found something to smash");
 				//console.log(timestamp);
 				//counter = i;
-					// Create Alarm
-				
+		
+		// Creates Alarm and assigns a timestamp		
 		chrome.alarms.create(json[i].uuid, {
 			when: timestamp
 		});
@@ -130,9 +130,8 @@ function createAlarm() {
 		chrome.alarms.getAll(function(alarms){
 
 			for(i=0;i<alarms.length;i++){
-				console.log("Alarms in queue  " + alarms.length);
-				console.log("Alarm ID  " + alarms[0].name);
-				console.log("Alarm Time  " + alarms[0].scheduledTime);
+				console.log("There is/are:  " + alarms.length + " alarms in queue.");
+				console.log("Alarm ID:  " + alarms[0].name +"| Alarm Time:  " + alarms[0].scheduledTime);
 						
 				}
 		});
@@ -175,24 +174,31 @@ function notClicked(notID) {
 }
 	
 chrome.alarms.onAlarm.addListener(function( alarm ) {
-	console.log("Alarm was found and executed, it punched.!", alarm);
-				  
-	var notification3 = new Notification('I dont even get paid to do your shit.', {
-		icon: 'icons/icon48.png',
-		body: 'Running your nothingness...',
+	console.log("Alarm process now: ", alarm.name);
+	
+	chrome.notifications.create('inismash',{
+			type:'basic',
+			title:'Running a schedule smash.',
+			iconUrl: 'icons/icon128.png',
+			message: getMessages(),
+			expandedMessage:'Hello thanks for using our app',
+			priority:1,
+	},function(id) {
+		myNotificationID = id;
 	});
+
 	setTimeout(function(){
-		notification3.close();
-	}, 3000); 
-	console.log(alarm.name);
+		chrome.notifications.clear('inismash')
+	}, 3000);
+	
 					//checkitemdate();
 					///////////////////////////////////////////////////////////
 					///////////////////////////////////////////////////////////
 	for (i=0;i<json.length;i++){ //will go through all the data array in the json file
-		
+		//goes through all the smashes in localstorage and compares it with the alarm in queue, if one UUID matches with the alarm it grabs all the data
 		if (json[i].uuid === alarm.name){ //will stop and grab all data from the array that matches the time
 
-			console.log("We found something to punch");
+			console.log("Found Smash UUID: " + json[i].uuid + " time: " + json[i].time + " that matched alarm: " + alarm.name);
 			counter = i;
 
 			chrome.tabs.create({'url': "http://km2.timetrak.com:85/web.exe?sp2application=079950102ClocTrak", active: false, selected: false,  }, function(tab){ 
@@ -200,8 +206,8 @@ chrome.alarms.onAlarm.addListener(function( alarm ) {
 				tabID = tab.id;
 			});
 							
-							//listens to the tab recently created by ID and makes sure to add the inject.js
-							//including the jquery library every time it changes/updates etc...
+			//listens to the tab recently created by ID and makes sure to add the inject.js
+			//including the jquery library every time it changes/updates etc...
 			chrome.tabs.onUpdated.addListener(function(tabID, info, tab) {
 				chrome.tabs.executeScript(tab.id, { file: 'src/options_custom/jquery-1.11.1.min.js', runAt : 'document_start' }, function(tab) {
 					chrome.tabs.executeScript(tabID, { 
@@ -213,13 +219,13 @@ chrome.alarms.onAlarm.addListener(function( alarm ) {
 			});
 							
 							
-			//Lets send the punch data from the matching array to the inject.js script
+			//Lets send the smash data from the matching array to the inject.js script
 			chrome.extension.onMessage.addListener(function(request, sender, sendResponse) {
-				if (request.method == 'getpunchdata') {
-					var objectbadgeString = json[counter].badgeID;
-					var objectpunchString = json[counter].punch;
+				if (request.method == 'getsmashdata') {
+					var objectsmashIDString = json[counter].smashID;
+					var objectsmashString = json[counter].smash;
 					var objectstatusString = json[counter].status;							
-					sendResponse({data1: objectbadgeString, data2: objectpunchString, data3: objectstatusString});
+					sendResponse({data1: objectsmashIDString, data2: objectsmashString, data3: objectstatusString});
 				} else {
 					sendResponse({}); // snub them.
 				}
@@ -231,46 +237,46 @@ chrome.alarms.onAlarm.addListener(function( alarm ) {
 				console.assert(port.name == "injectscript");
 				port.onMessage.addListener(function(msg) {
 					if (msg.pagestate == "PageReady"){
-						port.postMessage({dothis: "Selecting type of Punch"});
+						port.postMessage({dothis: "Selecting type of smash"});
 						console.log( "Timetrak Tab loaded" );
-					}else if (msg.didthis == "Punch Type selected"){
+					}else if (msg.didthis == "smash Type selected"){
 						port.postMessage({dothis: "Enter Badge ID"});
-						console.log( "Punch Type entered" );
-					}else if (msg.didthis == "Badge ID entered"){
-						port.postMessage({dothis: "Submit Badge"});
-						console.log( "Badge ID entered" );
-					}else if (msg.didthis == "Click submitted"){
-						console.log( "Click submitted" );
-						port.postMessage({dothis: "Was the punch accepted?" });
-					}else if (msg.didthis == "Accepted was found"){
-						var punchstatus = json[counter].status;
-						json[counter].status = "yes";
-						localStorage.setItem('dataSet', JSON.stringify(json));
-						console.log(punchstatus);
+						console.log( "smash Type entered" );
+					 }//else if (msg.didthis == "Badge ID entered"){
+						// port.postMessage({dothis: "Submit Badge"});
+						// console.log( "Badge ID entered" );
+					// }else if (msg.didthis == "Click submitted"){
+						// console.log( "Click submitted" );
+						// port.postMessage({dothis: "Was the smash accepted?" });
+					// }else if (msg.didthis == "Accepted was found"){
+						// var smashstatus = json[counter].status;
+						// json[counter].status = "yes";
+						// localStorage.setItem('dataSet', JSON.stringify(json));
+						// console.log(smashstatus);
 
 													//setTimeout( function(){
-						console.log("Punch Accepted closing tab");
+						// console.log("smash Accepted closing tab");
 														
-						chrome.tabs.remove(tab.id);									
+						//chrome.tabs.remove(tab.id);									
 													//}, 1000); // delay 5000 ms
 													
-					}else if (msg.didthis == "punch already ran"){
+					// }else if (msg.didthis == "smash already ran"){
 													//setTimeout( function(){
-						console.log("closing tab");
+						// console.log("closing tab");
 														
-						chrome.tabs.remove(tab.id);
+						// chrome.tabs.remove(tab.id);
 													//}, 7000); // delay 5000 ms
-					}else if (msg.didthis == "Close Tab"){
-						console.log( "Closing Tab" );
-						chrome.tabs.remove(tabID);
+					// }else if (msg.didthis == "Close Tab"){
+						// console.log( "Closing Tab" );
+						// chrome.tabs.remove(tabID);
 
-					}
+					// }
 				});
 			});
 									
 									
 							////////////////////////////////
-							// Places the same punch for the next day once it is executed.
+							// Places the same smash for the next day once it is executed.
 							///////////////////////////////
 			var time = json[i].time;
 			var tt = time.split(":");
@@ -290,7 +296,7 @@ chrome.alarms.onAlarm.addListener(function( alarm ) {
 							//////////////////////////////////
 							
 		};//
-						//console.log("Nothing to punch");
+						//console.log("Nothing to smash");
 
 	};
 					///////////////////////////////////////////////////////////
@@ -338,11 +344,11 @@ console.assert(port.name == "knockknock");
 	//Function that shows the current smashes in queue
 	function getallalarms() {
 		chrome.alarms.getAll(function(alarms){
-			if(alarms.length === 1){var punchsinplu = "Nothing™";
-			}else{punchsinplu = "Nothings™"};
+			if(alarms.length === 1){var smashsinplu = "Nothing™";
+			}else{smashsinplu = "Nothings™"};
 			var notification2 = new Notification(getMessages(), {
 				icon: 'icons/icon48.png',
-				body: alarms.length + " " + punchsinplu + " to run.",
+				body: alarms.length + " " + smashsinplu + " to run.",
 			});
 			
 			setTimeout(function(){
@@ -398,28 +404,28 @@ chrome.runtime.onConnect.addListener(function(port2) {
 	//console.assert(port2.name == "tofrominjectscript");
 	port2.onMessage.addListener(function(msg) {
 		if (msg.pagestate == "PageReady"){
-			port.postMessage({dothis: "Selecting type of Punch"});
+			port.postMessage({dothis: "Selecting type of smash"});
 			console.log( "Timetrak Tab loaded" );
-		}else if (msg.didthis == "Punch Type selected"){
+		}else if (msg.didthis == "smash Type selected"){
 			port.postMessage({dothis: "Enter Badge ID"});
-			console.log( "Punch Type entered" );
+			console.log( "smash Type entered" );
 		}else if (msg.didthis == "Badge ID entered"){
 			port.postMessage({dothis: "Submit Badge"});
 			console.log( "Badge ID entered" );
 		}else if (msg.didthis == "Click submitted"){
 			console.log( "Click submitted" );
-			port.postMessage({dothis: "Was the punch accepted?" });
+			port.postMessage({dothis: "Was the smash accepted?" });
 		}else if (msg.didthis == "Accepted was found"){
-			var punchstatus = json[counter].status;
+			var smashstatus = json[counter].status;
 			json[counter].status = "yes";
 			localStorage.setItem('dataSet', JSON.stringify(json));
-			console.log(punchstatus);
+			console.log(smashstatus);
 			//setTimeout( function(){
-			console.log("Punch Accepted closing tab");
+			console.log("smash Accepted closing tab");
 			chrome.tabs.remove(tab.id);									
 			//}, 1000); // delay 5000 ms
 
-		}else if (msg.didthis == "punch already ran"){
+		}else if (msg.didthis == "smash already ran"){
 			//setTimeout( function(){
 			console.log("closing tab");
 																	

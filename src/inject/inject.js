@@ -1,31 +1,31 @@
 ////////////////////////////////////////////////////////////////////////////////
 
-chrome.extension.sendMessage({method: "getpunchdata"}, function(response) {
-	var badgeID = response.data1;
-	var punch = response.data2;
+chrome.extension.sendMessage({method: "getsmashdata"}, function(response) {
+	var smashID = response.data1;
+	var smash = response.data2;
 	var status = response.data3;
 	
 	//var foundin = $('*:contains("Honduras KM2")');
 	
-	var port2 = chrome.runtime.connect({name: "tofrominjectscript"});
+	var port2 = chrome.runtime.connect({name: "injectscript"});
 	port2.postMessage({pagestate: "PageReady"});
 	port2.onMessage.addListener(function(msg) {
 	
 		$('*:contains("Honduras KM2")').each(function(){
 		 if($(this).children().length < 1) 
 			$(this).css("border","solid 2px red");
-			$("input[name='"+ punch +"']").click();
+			$("input[name='"+ smash +"']").click();
 		});
 		
 		$('*:contains("Enter Badge Number")').each(function(){
 		 if($(this).children().length < 1) 
 			$(this).css("border","solid 2px red");
-			$("input[name*='MSG4']").val(badgeID);
+			$("input[name*='MSG4']").val(smashID);
 		});
 		$('*:contains("SWIPE EMPLOYEE BADGE")').each(function(){
 		if($(this).children().length < 1) 
 			 $(this).css("border","solid 2px red");
-			 $("input[name*='MSG4']").val(badgeID);			  
+			 $("input[name*='MSG4']").val(smashID);			  
 			  //port.postMessage({didthis: "Click submitted"});
 		});
 		
@@ -47,20 +47,20 @@ chrome.extension.sendMessage({method: "getpunchdata"}, function(response) {
 	//Accepted
 	//HAVE A NICE DAY
 	//if (founding){alert("It does have Honduras KM2");};
-	//alert(punch + status + badgeID);
+	//alert(smash + status + smashID);
 /* 	var port = chrome.runtime.connect({name: "injectscript"});
 	port.postMessage({pagestate: "PageReady"});
 	port.onMessage.addListener(function(msg) {
 		if (status == "no"){
-			if (msg.dothis == "Selecting type of Punch"){
+			if (msg.dothis == "Selecting type of smash"){
 				$(document).on("pageload",function(){
-					$("input[name='"+ punch +"']").click();
-					port.postMessage({didthis: "Punch Type selected"});
+					$("input[name='"+ smash +"']").click();
+					port.postMessage({didthis: "smash Type selected"});
 				});
 			}else if (msg.dothis == "Enter Badge ID"){
 				$(document).on("pageload",function(){
 					
-					$("input[name*='MSG4']").val(badgeID);
+					$("input[name*='MSG4']").val(smashID);
 					setTimeout( function(){
 						port.postMessage({didthis: "Badge ID entered"});
 					}, 5000); // delay 5000 ms
@@ -73,7 +73,7 @@ chrome.extension.sendMessage({method: "getpunchdata"}, function(response) {
 					}, 5000); // delay 5000 ms
 
 				});
-			}else if (msg.dothis == "Was the punch accepted?"){
+			}else if (msg.dothis == "Was the smash accepted?"){
 				$(document).on("pageload",function(){
 					var foundAccepted = $('*:contains("Accepted")');
 					if (foundAccepted) {  
@@ -82,7 +82,7 @@ chrome.extension.sendMessage({method: "getpunchdata"}, function(response) {
 				});
 			}
 		} else if ( status == "yes"){
-			port.postMessage({didthis: "punch already ran"});
+			port.postMessage({didthis: "smash already ran"});
 		}
 	}); */
 });

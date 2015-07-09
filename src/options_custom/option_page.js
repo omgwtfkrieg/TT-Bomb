@@ -41,9 +41,9 @@ $(function() {
 
 		"aoColumns":[ 
 			{ "sTitle": "UID", "mData": "uuid" },
-			{ "sTitle": "Smash ID", "mData": "badgeID" },
-			{ "sTitle": "Smash Type", "mData": "punchType" },
-			{ "sTitle": "Smash Value", "mData": "punch" },
+			{ "sTitle": "Smash ID", "mData": "smashID" },
+			{ "sTitle": "Smash Type", "mData": "smashType" },
+			{ "sTitle": "Smash Value", "mData": "smash" },
 			{ "sTitle": "Time", "mData": "time" },
 			{ "sTitle": "Status", "mData": "status" },
 			{ "sTitle": "Remove", "mData": "button" },
@@ -74,9 +74,9 @@ $(function() {
 	$('#Save').click(function () {
 		
 		var uuid = guid();
-		console.log($('#badgeID').val() + " " + $('#punchtype option:selected').text() + " " + $('#punchtype').val() + " " + $('#timepicker').val() + " " + $('#uniqueID').val());
+		console.log($('#smashID').val() + " " + $('#smashType option:selected').text() + " " + $('#smashType').val() + " " + $('#timepicker').val() + " " + $('#uniqueID').val());
 		//checks if input fields are not empty, if they are it will show an alert message
-		if ($('#badgeID').val() == '' || $('#punchtype select option:selected').val() == '' || $('#timepicker').val() == '') {
+		if ($('#smashID').val() == '' || $('#smashType select option:selected').val() == '' || $('#timepicker').val() == '') {
 			$('#alert_placeholder').hide().html('<p class="flow-text red-text text-darken-1" id="alert_placeholder"><i class="small mdi-alert-warning yellow-text text-darken-2" style="float:left; margin:0 7px 0px 0;"></i>You missed a field!<a href="#"><i class="material-icons">clear</i></a></p>').fadeIn('slow');
 
 		} else {
@@ -85,9 +85,9 @@ $(function() {
 			var tabledata; 
 			tabledata = {
 				uuid : uuid,
-				badgeID : $('#badgeID').val(),
-				punchType : $('#punchtype option:selected').text(),
-				punch : $('#punchtype').val(),
+				smashID : $('#smashID').val(),
+				smashType : $('#smashType option:selected').text(),
+				smash : $('#smashType').val(),
 				time : $('#timepicker').val(),
 				status: "no",
 				button: "<button class='delete btn waves-effect waves-light red lighten-2'><span class='mdi-action-highlight-remove'></span></button>",
@@ -101,7 +101,7 @@ $(function() {
 				//$( ".addnothing" ).hide("slow").empty();
 				//$('.addnothing').fadeToggle( "fast", "linear" );
 				$('#alert_placeholder').empty();
-				$('#addpunchinqueue')[0].reset();
+				$('#addsmashinqueue')[0].reset();
 				$('#Save').prop("disabled", true);
 		}
 
@@ -130,7 +130,7 @@ $(function() {
 	// close button action, will hide and reset values from the addnothing form
 	$('#addnothingclose').click(function () {
 		$('.addnothing').fadeToggle( "fast", "linear" );
-		$('#addpunchinqueue')[0].reset();
+		$('#addsmashinqueue')[0].reset();
 		$('#Save').prop("disabled", true);
 	});
 	
@@ -170,7 +170,7 @@ $(function() {
 	});
 	$('.clockpicker').clockpicker({donetext: 'Done',autoclose: true,align: 'right',});//initialize the clock picker in the time input box
 	$('select').material_select();//initialize the select option for materialize
-	$('#badgeID').keyup(function() {//enables the save button once smash ID meets the 5 character long criteria
+	$('#smashID').keyup(function() {//enables the save button once smash ID meets the 5 character long criteria
 		if($(this).val().length == 5 ) {
 			$('#Save').prop("disabled", false);
 		}
