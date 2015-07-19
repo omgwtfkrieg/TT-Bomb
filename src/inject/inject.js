@@ -7,9 +7,9 @@ chrome.extension.sendMessage({method: "getsmashdata"}, function(response) {
 	
 	//var foundin = $('*:contains("Honduras KM2")');
 	
-	var port2 = chrome.runtime.connect({name: "injectscript"});
-	port2.postMessage({pagestate: "PageReady"});
-	port2.onMessage.addListener(function(msg) {
+	var port = chrome.runtime.connect({name: "injectscript"});
+	port.postMessage({pagestate: "PageReady"});
+	port.onMessage.addListener(function(msg) {
 	
 		$('*:contains("Honduras KM2")').each(function(){
 		 if($(this).children().length < 1) 
