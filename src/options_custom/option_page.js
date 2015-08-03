@@ -1,5 +1,27 @@
 $(function() {
+	$(document).ready(function(){
+		$('.tooltipped').tooltip({delay: 50});
+		smashes_pending();
+	});
 	
+	function smashes_pending() {
+		$( "ul#queue_list li" ).empty();
+		//port.postMessage({answer: "Test"});var alarmLogger = function(alarm){ console.log(alarm.name + " " + alarm.scheduledTime) };
+		var alarmsqlist = function(alarm){
+			//myDate = new Date(1000*alarm.scheduledTime);
+			var epoch = alarm.scheduledTime;
+			var epoch2 = parseInt((""+epoch).substring(0,13), 10);
+			var dt = new Date(epoch2);
+			//dt.setDate(dt.getDate()+1);
+			//alert(dt); //Sat Jul 20 2013 00:00:00 GMT+0100 (GMT Daylight Time) 
+			//alert(dt.valueOf()); //1374274800000
+		$( 'ul#queue_list').append( '<li class="collection-item">' + alarm.name + ' <br/ >' + dt + '</li>' );
+		//$( 'ul#queue_list').append( '<li>hello</li>' );
+		//console.log(alarm.name + " " + alarm.scheduledTime)
+		};
+		chrome.alarms.getAll(function(alarms){ alarms.forEach(alarmsqlist); });
+		return false;
+	};
 	///////////////////////////////////////////////////////
 	// Generate rudimentary unique ID.
 	////////////////////////////////////////////////////////
@@ -90,7 +112,7 @@ $(function() {
 				smash : $('#smashType').val(),
 				time : $('#timepicker').val(),
 				status: "no",
-				button: "<button class='delete btn waves-effect waves-light red lighten-2'><span class='mdi-action-highlight-remove'></span></button>",
+				button: "<button class='delete btn waves-effect waves-light pink lighten-3'><i class='material-icons'>clear</i></button>",
 				
 		};
 
@@ -103,9 +125,9 @@ $(function() {
 				$('#alert_placeholder').empty();
 				$('#addsmashinqueue')[0].reset();
 				$('#Save').prop("disabled", true);
+				$('.addnothing').fadeToggle( "fast", "linear" );
 		}
 
-	
 	return false;
 	});
 	
@@ -124,18 +146,21 @@ $(function() {
 		for (i=0;i<json.length;i++)
 		if (json[i].uuid == getuuid) json.splice(i,1);
 		localStorage["dataSet"] = JSON.stringify(json);
-		
+		return false;
 
 	});
 	// close button action, will hide and reset values from the addnothing form
 	$('#addnothingclose').click(function () {
+		$('select').material_select();
 		$('.addnothing').fadeToggle( "fast", "linear" );
 		$('#addsmashinqueue')[0].reset();
 		$('#Save').prop("disabled", true);
+		return false;
 	});
 	
 	$(document).on('click', '.test-3', function () {
-	chrome.alarms.clearAll();
+		chrome.alarms.clearAll();
+		return false;
 	});
 
 	//$(".alarmsinq").click(function (){alarmsqueue();});
@@ -144,13 +169,38 @@ $(function() {
 		//chrome.runtime.sendMessage({ msg: "createalarm" });
 		port.postMessage({joke: "Knock knock"});
 		$('.getalarms i').addClass('spin');	
+		return false;
 	});
 	$(".addalarms").click(function () {//chrome.extension.sendRequest({ msg: "clearalarms" }); //runs the clearalarm(); function in the background.js
 		port.postMessage({answer: "Create Alarms"});
+		return false;
 	});
 	
 	$(".removealarms").click(function () {//chrome.extension.sendRequest({ msg: "clearalarms" }); //runs the clearalarm(); function in the background.js
 		port.postMessage({answer: "Remove Alarms"});
+		return false;
+	});
+	$('.testbutton').click(function () {
+		$( "ul#queue_list li" ).empty();
+		//port.postMessage({answer: "Test"});var alarmLogger = function(alarm){ console.log(alarm.name + " " + alarm.scheduledTime) };
+		var alarmsqlist = function(alarm){
+			//myDate = new Date(1000*alarm.scheduledTime);
+			var epoch = alarm.scheduledTime;
+			var epoch2 = parseInt((""+epoch).substring(0,13), 10);
+			var dt = new Date(epoch2);
+			//dt.setDate(dt.getDate()+1);
+			//alert(dt); //Sat Jul 20 2013 00:00:00 GMT+0100 (GMT Daylight Time) 
+			//alert(dt.valueOf()); //1374274800000
+		$( 'ul#queue_list').append( '<li class=\'collection-item\'>' + alarm.name + ' <br/ >' + dt + '</li>' );
+		//$( 'ul#queue_list').append( '<li>hello</li>' );
+		//console.log(alarm.name + " " + alarm.scheduledTime)
+		};
+		chrome.alarms.getAll(function(alarms){ alarms.forEach(alarmsqlist); });
+		return false;
+	});
+	$('.reloadext').click(function () {
+		chrome.runtime.reload();
+		return false;
 	});
 	
 	//<--end-->
@@ -158,15 +208,15 @@ $(function() {
 	//Toggles the add option to add Smashes
 	$('.addnothing').hide();//hides the add option form when the website loads
 	$("#addnothing").click(function(){//instructs the app what to do when you click on the add button
-		var $this = $(this);
-		$this.toggleClass('buttonHidden');//add a class in order to switch icons on toggle action when clicked
-		if($this.hasClass('buttonHidden')){
-			$this.html('<i class="material-icons">remove</i>');           
-		} else {
-			$this.html('<i class="material-icons">add</i>');
-		}
+		// var $this = $(this);
+		// $this.toggleClass('buttonHidden');//add a class in order to switch icons on toggle action when clicked
+		// if($this.hasClass('buttonHidden')){
+			// $this.html('<i class="material-icons">access_alarm</i>');           
+		// } else {
+			// $this.html('<i class="material-icons">add_alarm</i>');
+		// }
 		$(".addnothing").fadeToggle( "fast", "linear" );//adds the fade in animation to the form when loading
-			
+		return false;
 	});
 	$('.clockpicker').clockpicker({donetext: 'Done',autoclose: true,align: 'right',});//initialize the clock picker in the time input box
 	$('select').material_select();//initialize the select option for materialize
@@ -200,37 +250,6 @@ $(function() {
 			// if(request.msg == "clearalarms"){clearalarms();};
 		// }
 	// );
-	$('.testbutton').click(function () {
-		// var items = Array(     
-			// "I pity the FOOL!", 
-			// "I aint gettin on no plane!", 
-			// "Quit yo Jibba Jabba!", 
-			// "Shut up, fool!", 
-			// "Life's tough, but I'm tougher!", 
-			// "Do some prep!",
-			// "I'm on a real short leash here", 
-			// "Don't make me mad, Arrr!", 
-			// "You're gonna meet my friend, PAIN!",
-			// "You aint hurt, you pathetic!",
-			// "Accept who you are, unless you’re a serial killer",
-			// "I tried to be normal once. Worst two minutes of my life.",
-			// "May your coffee be strong and your Monday be short.",
-			// "Out of all the lies I\'ve told, \"Just kidding!\" is my favorite.",
-			// "People say nothing is impossible, but I do nothing every day.",
-			// "I put the pro in procrastinate",
-			// "It’s all fun and games, until someone calls the cops. Then it’s a new game; hide and seek",
-			// "I’m great in bed; I can sleep for days",
-			// "Silence is golden; duct tape is silver",
-			// "A good friend will help you move, a best friend will help you move a dead body",
-			// "Trying to understand you is like trying to smell the color 9",
-			// "Anything that is unrelated to elephants is irrelephant",
-			// "Most people are only alive because it’s illegal to shoot them",
-			// "If God made everything, then God must be Chinese?",
-			// "Some people are like Slinky’s. Pretty much useless but make you smile when you push them down the stairs. :)",
-			// "Never argue with an idiot they’ll drag you down to their level and beat you through experience"
-			// );
-		// var item = items[Math.floor(Math.random()*items.length)];
-		// alert(item);
-	});
+	
 
 }); //END

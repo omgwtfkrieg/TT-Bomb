@@ -7,7 +7,7 @@ chrome.extension.sendMessage({method: "getsmashdata"}, function(response) {
 	
 	//var foundin = $('*:contains("Honduras KM2")');
 	
-	var port = chrome.runtime.connect({name: "injectscript"});
+	var port = chrome.runtime.connect({name: "injectconnection"});
 	port.postMessage({pagestate: "PageReady"});
 	port.onMessage.addListener(function(msg) {
 	
@@ -22,24 +22,51 @@ chrome.extension.sendMessage({method: "getsmashdata"}, function(response) {
 			$(this).css("border","solid 2px red");
 			$("input[name*='MSG4']").val(smashID);
 		});
-		$('*:contains("SWIPE EMPLOYEE BADGE")').each(function(){
-		if($(this).children().length < 1) 
-			 $(this).css("border","solid 2px red");
-			 $("input[name*='MSG4']").val(smashID);			  
-			  //port.postMessage({didthis: "Click submitted"});
+		//or
+		$('*:contains("Enter Badge #")').each(function(){
+		 if($(this).children().length < 1) 
+			$(this).css("border","solid 2px red");
+			$("input[name*='MSG4']").val(smashID);
 		});
-		
 		
 		if(!!$("input[name*='MSG4']").val){
 			$("input[name=OK]").click();
 		};
-		$('*:contains("Your Session Has Terminated - Please Close Your Browser")').each(function(){
-			port2.postMessage({didthis: "Close Tab"});
+		$('*:contains("Accepted")').each(function(){
+			port.postMessage({didthis: "Smash Accepted"});
+		});
+		$('*:contains("Session terminated")').each(function(){
+			port.postMessage({didthis: "Close Tab - Session Terminated"});
+		});
+		$('*:contains("HAVE A NICE DAY")').each(function(){
+			port.postMessage({didthis: "Close Tab - HAVE A NICE DAY"});
+		});
+		$('*:contains("Cancelled")').each(function(){
+			port.postMessage({didthis: "Close Tab - Cancelled"});
+		});
+		$('*:contains("Invalid Badte ID")').each(function(){
+			port.postMessage({didthis: "Close Tab - Invalid Badge ID"});
 		});
 		
-		$('*:contains("Accepted")').each(function(){
-			port2.postMessage({didthis: "Accepted was found"});
-		});
+		
+		// $('*:contains("SWIPE EMPLOYEE BADGE")').each(function(){
+		// if($(this).children().length < 1) 
+			 // $(this).css("border","solid 2px red");
+			 // $("input[name*='MSG4']").val(smashID);			  
+			  //port.postMessage({didthis: "Click submitted"});
+		// });
+		
+		
+		// if(!!$("input[name*='MSG4']").val){
+			// $("input[name=OK]").click();
+		// };
+		// $('*:contains("Your Session Has Terminated - Please Close Your Browser")').each(function(){
+			//port2.postMessage({didthis: "Close Tab"});
+		// });
+		
+		// $('*:contains("Accepted")').each(function(){
+			//port2.postMessage({didthis: "Accepted was found"});
+		// });
 
 		
 		
