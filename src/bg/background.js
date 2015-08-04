@@ -123,7 +123,7 @@ function createAlarm() {
 				
 		var now = new Date();
 		var day = now.getDate();
-		if (now.getHours() > tt[0] || now.getMinutes() > tt[1]) {
+		if (now.getMinutes() > tt[1]|| now.getHours() > tt[0]) {
 			// If the smash already passed sets to try next day
 			day += 1;
 		}

@@ -3,23 +3,56 @@ $(function() {
 		$('.tooltipped').tooltip({delay: 50});
 		smashes_pending();
 	});
-	
+	//Displays the smashes in queue in the Pending div block
 	function smashes_pending() {
+		var t = $('#queue_table').DataTable({
+			"data": [],
+			"aoColumns":[ 
+			{ "sTitle": "Time"},
+			{ "sTitle": "UID"},
+			
+        ],
+			//"bStateSave": true,
+			//"stateSave": true,
+			"bSort" : false,
+			"bPaginate": false,
+			"bLengthChange": false,
+			"bFilter": false,
+			"bInfo": false,
+			"bAutoWidth": false,
+			
+		});
 		$( "ul#queue_list li" ).empty();
 		//port.postMessage({answer: "Test"});var alarmLogger = function(alarm){ console.log(alarm.name + " " + alarm.scheduledTime) };
 		var alarmsqlist = function(alarm){
 			//myDate = new Date(1000*alarm.scheduledTime);
 			var epoch = alarm.scheduledTime;
 			var epoch2 = parseInt((""+epoch).substring(0,13), 10);
+			//var dt = new Date(epoch2);
 			var dt = new Date(epoch2);
+			dt = (
+				(dt.getMonth() ) + "/" +
+				dt.getDate() + "/" +
+				dt.getFullYear() + " " +
+				dt.getHours() + ":" +
+				dt.getMinutes() //+ ":" 
+				//dt.getSeconds()
+			);
 			//dt.setDate(dt.getDate()+1);
 			//alert(dt); //Sat Jul 20 2013 00:00:00 GMT+0100 (GMT Daylight Time) 
 			//alert(dt.valueOf()); //1374274800000
-		$( 'ul#queue_list').append( '<li class="collection-item">' + alarm.name + ' <br/ >' + dt + '</li>' );
+		//$( 'ul#queue_list').append( '<li class="collection-item"><span class="truncate">' + alarm.name + '</span> <br/ >' + dt + '</li>' );
 		//$( 'ul#queue_list').append( '<li>hello</li>' );
 		//console.log(alarm.name + " " + alarm.scheduledTime)
+				
+		t.row.add( [
+				dt,
+				alarm.name,
+			] ).draw();
 		};
 		chrome.alarms.getAll(function(alarms){ alarms.forEach(alarmsqlist); });
+
+
 		return false;
 	};
 	///////////////////////////////////////////////////////
@@ -112,7 +145,7 @@ $(function() {
 				smash : $('#smashType').val(),
 				time : $('#timepicker').val(),
 				status: "no",
-				button: "<button class='delete btn waves-effect waves-light pink lighten-3'><i class='material-icons'>clear</i></button>",
+				button: "<button class='delete btn waves-effect waves-light red lighten-2'><i class='material-icons'>clear</i></button>",
 				
 		};
 
