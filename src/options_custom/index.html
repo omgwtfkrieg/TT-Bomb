@@ -118,7 +118,7 @@
 	<header class="white-text red lighten-2">
 		<div class="red lighten-1" style="padding-top: 20px;"></div>
 		<div class="col s12 center-align">
-			<div><h1><i class="large mdi-action-alarm"></i>π-Bomb</h1></div>
+			<div><h1>π-Bomb</h1></div>
 		</div>
 		<div class="col s12 center-align">
 			<h5>App built for Smashing&#8482; time.</h5>
@@ -127,11 +127,11 @@
 		<br/ >
 				<div class="divider"></div>
 		<div class="section center-align">
-		<a class="waves-effect waves-light btn-large teal lighten-2 tooltipped" id="addnothing" data-position="top" data-delay="50" data-tooltip="Add Smashes™"><i class="material-icons">add_alarm</i></a>
+		<a class="waves-effect waves-light btn-large teal lighten-2 tooltipped" id="addnothing" data-position="top" data-delay="50" data-tooltip="Add Smashes™"><i class="material-icons">playlist_add</i></a>
 		<a class="waves-effect waves-light btn-large teal lighten-2 tooltipped getalarms" data-position="top" data-delay="50" data-tooltip="Reload Smashes™"><i class="material-icons">cached</i></a>
 		<a class="waves-effect waves-light btn-large teal lighten-2 tooltipped removealarms" data-position="top" data-delay="50" data-tooltip="Stop Smashes™"><i class="material-icons">stop</i></a>
 		<a class="waves-effect waves-light btn-large teal lighten-2 tooltipped addalarms" data-position="top" data-delay="50" data-tooltip="Start Smashes™"><i class="material-icons">play_arrow</i></a>
-		<a class="waves-effect waves-light btn-large teal lighten-2 tooltipped testbutton" data-position="top" data-delay="50" data-tooltip="Test Smashes™"><i class="material-icons">toys</i></a>
+		<!-- <a class="waves-effect waves-light btn-large teal lighten-2 tooltipped testbutton" data-position="top" data-delay="50" data-tooltip="Test Smashes™"><i class="material-icons">toys</i></a> -->
 		<a class="waves-effect waves-light btn-large teal lighten-2 tooltipped reloadext" data-position="top" data-delay="50" data-tooltip="Reload App"><i class="material-icons">refresh</i></a>
 		</div>
 		<div class="divider"></div>
@@ -139,23 +139,26 @@
 	<main class="container">
 	<!-- <div class="black" style="padding-top: 20px; width: 0 auto;"></div> -->
 	<div class="row">
-		<div class="col s3">
-			<div class="card grey lighten-5">
-				<div class="card-content white-text teal lighten-2 center-align">
-					<span class="card-title">Next-in-Queue</span>			
+		<div id="queue_list"  class="col s3">
+			<!-- <div class="card-panel grey lighten-5"> -->
+				<div class="card white-text teal lighten-2 center-align">
+					<div class="card-content">
+					<span class="card-title">Next-in-Queue</span>		
+					</div>
 				</div>
-				<div class="card-action white grey-text text-darken-1">
-					<table id="queue_table" class="table table-striped table-hover" cellspacing="0" width="100%"></table>
-					<ul id="queue_list" class="collection">
+				<!-- <div class="card-action white grey-text text-darken-1">
+					
+				</div> -->
+				
+			<!-- </div> -->
+			<ul class="collapsible"  data-collapsible="expandable">
 						
-					</ul>
-				</div>
-			</div>
+			</ul>
 		</div>
 		<div class="col s9">
 			<div class="card addnothing grey lighten-5">
 				<div class="card-content white-text teal lighten-2">
-					<span class="card-title"><i class="material-icons">playlist_add</i> Add Nothing&#8482;</span>
+					<span class="card-title">Add Smash&#8482;</span>
 				</div>			
 				<div class="card-action white center-align">
 					<div id = "alert_placeholder"></div>
@@ -193,7 +196,7 @@
 	
 		<div class="card teal lighten-2">
 			<div class="card-content white-text">
-				<span class="card-title">Smashes&#8482</span>
+				<span class="card-title">Smashes&#8482;</span>
 				
             </div>
             <div class="card-action white grey-text text-darken-1">

@@ -3,33 +3,18 @@ $(function() {
 		$('.tooltipped').tooltip({delay: 50});
 		smashes_pending();
 	});
-	//Displays the smashes in queue in the Pending div block
+	
 	function smashes_pending() {
-		var t = $('#queue_table').DataTable({
-			"data": [],
-			"aoColumns":[ 
-			{ "sTitle": "Time"},
-			{ "sTitle": "UID"},
-			
-        ],
-			//"bStateSave": true,
-			//"stateSave": true,
-			"bSort" : false,
-			"bPaginate": false,
-			"bLengthChange": false,
-			"bFilter": false,
-			"bInfo": false,
-			"bAutoWidth": false,
-			
-		});
-		$( "ul#queue_list li" ).empty();
+		$( "#queue_list ul li" ).empty();
 		//port.postMessage({answer: "Test"});var alarmLogger = function(alarm){ console.log(alarm.name + " " + alarm.scheduledTime) };
 		var alarmsqlist = function(alarm){
 			//myDate = new Date(1000*alarm.scheduledTime);
 			var epoch = alarm.scheduledTime;
 			var epoch2 = parseInt((""+epoch).substring(0,13), 10);
-			//var dt = new Date(epoch2);
 			var dt = new Date(epoch2);
+			//dt.setDate(dt.getDate()+1);
+			//alert(dt); //Sat Jul 20 2013 00:00:00 GMT+0100 (GMT Daylight Time) 
+			//alert(dt.valueOf()); //1374274800000
 			dt = (
 				(dt.getMonth() ) + "/" +
 				dt.getDate() + "/" +
@@ -38,23 +23,22 @@ $(function() {
 				dt.getMinutes() //+ ":" 
 				//dt.getSeconds()
 			);
-			//dt.setDate(dt.getDate()+1);
-			//alert(dt); //Sat Jul 20 2013 00:00:00 GMT+0100 (GMT Daylight Time) 
-			//alert(dt.valueOf()); //1374274800000
-		//$( 'ul#queue_list').append( '<li class="collection-item"><span class="truncate">' + alarm.name + '</span> <br/ >' + dt + '</li>' );
+		$( '#queue_list ul').append( '<li><div class="collapsible-header"><i class="material-icons teal-text lighten-2-text">keyboard_arrow_right</i>' + alarm.name + '</div><div class="collapsible-body"><p>' + dt + '</p></div></li>' );
+		$('.collapsible').collapsible({
+		  accordion : true, // A setting that changes the collapsible behavior to expandable instead of the default accordion style
+		});
+		$('#queue_list ul li:first div').addClass("active");
+		$("#queue_list ul li:first div i:contains('keyboard_arrow_right')").html("schedule");
 		//$( 'ul#queue_list').append( '<li>hello</li>' );
 		//console.log(alarm.name + " " + alarm.scheduledTime)
-				
-		t.row.add( [
-				dt,
-				alarm.name,
-			] ).draw();
 		};
 		chrome.alarms.getAll(function(alarms){ alarms.forEach(alarmsqlist); });
-
-
 		return false;
+		
+		
 	};
+	
+	
 	///////////////////////////////////////////////////////
 	// Generate rudimentary unique ID.
 	////////////////////////////////////////////////////////
@@ -118,6 +102,8 @@ $(function() {
 	oTable = $('#myTable').DataTable();
 	for (var i = 0; i < dataSet.length; i++) {
 		oTable.row.add(dataSet[i]).draw();
+		$("#myTable td:contains('no')").html("<i class='center-align material-icons teal-text lighten-2-text'>check</i>");
+		$('#myTable td').addClass("center-align");
 	}
 	////////////////////////////////////////////////////////
 	////////////////////////////////////////////////////////
