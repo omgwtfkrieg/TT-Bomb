@@ -16,14 +16,13 @@ $(function() {
 			//alert(dt); //Sat Jul 20 2013 00:00:00 GMT+0100 (GMT Daylight Time) 
 			//alert(dt.valueOf()); //1374274800000
 			dt = (
+				dt.getHours() + ":" +
+				dt.getMinutes() + " " +
 				(dt.getMonth() ) + "/" +
 				dt.getDate() + "/" +
-				dt.getFullYear() + " " +
-				dt.getHours() + ":" +
-				dt.getMinutes() //+ ":" 
-				//dt.getSeconds()
+				dt.getFullYear() 
 			);
-		$( '#queue_list ul').append( '<li><div class="collapsible-header"><i class="material-icons teal-text lighten-2-text">keyboard_arrow_right</i>' + alarm.name + '</div><div class="collapsible-body"><p>' + dt + '</p></div></li>' );
+		$( '#queue_list ul').append( '<li><div class="collapsible-header"><i class="material-icons teal-text lighten-2-text">keyboard_arrow_right</i>' + alarm.name + '</div><div class="collapsible-body center-align"><p>' + dt + '</p></div></li>' );
 		$('.collapsible').collapsible({
 		  accordion : true, // A setting that changes the collapsible behavior to expandable instead of the default accordion style
 		});
