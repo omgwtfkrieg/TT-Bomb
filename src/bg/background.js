@@ -72,7 +72,7 @@ var messages = [
 			
 		function getMessages() {
 			return messages[Math.floor(Math.random() * messages.length)];
-		};
+		}
 			
 
 var currenttime;
@@ -119,19 +119,32 @@ function createAlarm() {
 			
 		var time = json[i].time;
 		var tt = time.split(":");
-		//console.log(tt[0] + "-" + tt[1]);
+		console.log(tt[0] + "-" + tt[1]);
 				
 		var now = new Date();
+		//console.log(now);
 		var day = now.getDate();
-		if (now.getMinutes() > tt[1]|| now.getHours() > tt[0]) {
+		if (tt[0] < now.getHours()) {
 			// If the smash already passed sets to try next day
 			day += 1;
 		}
+		if (tt[0] <= now.getHours() && tt[1] <= now.getMinutes()) {
+			// If the smash already passed sets to try next day
+			day += 1;
+		}
+		if (tt[0] == now.getHours() && tt[1] <= now.getMinutes()) {
+			// If the smash already passed sets to try next day
+			day += 1;
+			//console.log("it worked!");
+		}
+		
+
 			// '+' casts the date to a number, like [object Date].getTime();
 		var timestamp = +new Date(now.getFullYear(), now.getMonth(), day, tt[0], tt[1], 0, 0);
 				//                        YYYY               MM      DD    HH     MM   SS MS
 				//console.log("We found something to smash");
-				//console.log(timestamp);
+				console.log(timestamp);
+				console.log(now.getMonth());
 				//counter = i;
 		
 		// Creates Alarm and assigns a timestamp		
@@ -141,20 +154,20 @@ function createAlarm() {
 		
 		alarmcounter++;
 				 
-		// chrome.alarms.getAll(function(alarms){
+		 chrome.alarms.getAll(function(alarms){
 
-			// for(i=0;i<alarms.length;i++){
-				// console.log("There is/are:  " + alarms.length + " alarms in queue.");
-				// console.log("Alarm ID:  " + alarms[0].name +" | Alarm Time:  " + alarms[0].scheduledTime);
+			 for(i=0;i<alarms.length;i++){
+				 console.log("There is/are:  " + alarms.length + " alarms in queue.");
+				 console.log("Alarm ID:  " + alarms[0].name +" | Alarm Time:  " + alarms[0].scheduledTime);
 						
-				// }
-		// });
+				 }
+		 });
 		
-	};
+	}
 		
-	chrome.alarms.getAll(function(alarms){
+/* 	chrome.alarms.getAll(function(alarms){
 			if(alarms.length === 1){var smashsinplu = "Nothing™";
-			}else{smashsinplu = "Nothings™"};
+			}else{smashsinplu = "Nothings™";}
 			var notification2 = new Notification(getMessages(), {
 				icon: 'icons/icon48.png',
 				body: alarms.length + " " + smashsinplu + " to run.",
@@ -165,7 +178,7 @@ function createAlarm() {
 			}, 3000); 
 			
 			//console.log(alarm);
-		});	
+		});	 */
 		
 	chrome.notifications.create('iniappnoti',{
 			type:'basic',
@@ -181,19 +194,19 @@ function createAlarm() {
 	});
 
 	setTimeout(function(){
-		chrome.notifications.clear('iniappnoti')
+		chrome.notifications.clear('iniappnoti');
 	}, 3000);
 	chrome.notifications.onButtonClicked.addListener(function(notifId, btnIdx) {
 		if (notifId === myNotificationID) {
 			if (btnIdx === 0) {
-				chrome.tabs.create({url: "/src/options_custom/index.html"});
+				chrome.tabs.create({url: 'chrome://extensions/?options=' + chrome.runtime.id});
 			} else if (btnIdx === 1) {
 					//alert("button2");
 			}
 		}
 	});
 	
-	var alarmLogger = function(alarm){ console.log(alarm.name + " " + alarm.scheduledTime) };
+	var alarmLogger = function(alarm){ console.log(alarm.name + " " + alarm.scheduledTime); };
 		chrome.alarms.getAll(function(alarms){ alarms.forEach(alarmLogger); });
 		
 		//$( 'ul#queue_list').append( '<li>works</li>' );
@@ -201,7 +214,7 @@ function createAlarm() {
 		//getallalarms();
 
 					//console.log(alarm.name);
-};//End of createAlarm
+}//End of createAlarm
 createAlarm(); // Initializes function on app load
 	
 function notClicked(notID) {
@@ -223,28 +236,18 @@ chrome.alarms.onAlarm.addListener(function( alarm ) {
 	});
 
 	setTimeout(function(){
-		chrome.notifications.clear('inismash')
+		chrome.notifications.clear('inismash');
 	}, 3000);
 	
 					//checkitemdate();
 					///////////////////////////////////////////////////////////
 					///////////////////////////////////////////////////////////
-	for (i=0;i<json.length;i++){ //will go through all the data array in the json file
-		var alarmcounter = 0;
-		//goes through all the smashes in localstorage and compares it with the alarm in queue, if one UUID matches with the alarm it grabs all the data
-		if (json[i].uuid === alarm.name){ //will stop and grab all data from the array that matches the time
-
-			console.log("Found Smash UUID: " + json[i].uuid + " time: " + json[i].time + " that matched alarm: " + alarm.name);
-			counter = i;
-
-			chrome.tabs.create({'url': "http://km2.timetrak.com:85/web.exe?sp2application=079950102ClocTrak", active: false, selected: false,  }, function(tab){ 
+  function createtab() {
+    chrome.tabs.create({'url': "http://km2.timetrak.com:85/web.exe?sp2application=079950102ClocTrak", active: false, selected: false,  }, function(tab){ 
 				console.log("Success! | Tab ID: " + tab.id + " created.");
 				tabID = tab.id;
-			});
-							
-			//listens to the tab recently created by ID and makes sure to add the inject.js
-			//including the jquery library every time it changes/updates etc...
-			chrome.tabs.onUpdated.addListener(function(tabID, info, tab) {
+		});
+		chrome.tabs.onUpdated.addListener(function(tabID, info, tab) {
 				chrome.tabs.executeScript(tab.id, { file: 'src/options_custom/jquery-1.11.1.min.js', runAt : 'document_start' }, function(tab) {
 					chrome.tabs.executeScript(tabID, { 
 						file : 'src/inject/inject.js',
@@ -289,7 +292,22 @@ chrome.alarms.onAlarm.addListener(function( alarm ) {
 					}
 				});
 			});	
-									
+					
+  }
+					
+	for (i=0;i<json.length;i++){ //will go through all the data array in the json file
+		var alarmcounter = 0;
+		//goes through all the smashes in localstorage and compares it with the alarm in queue, if one UUID matches with the alarm it grabs all the data
+		if (json[i].uuid === alarm.name){ //will stop and grab all data from the array that matches the time
+
+			console.log("Found Smash UUID: " + json[i].uuid + " time: " + json[i].time + " that matched alarm: " + alarm.name);
+			counter = i;
+
+			createtab();
+							
+			//listens to the tab recently created by ID and makes sure to add the inject.js
+			//including the jquery library every time it changes/updates etc...
+							
 									
 			//////////////////////////////////////////////////////////////
 			// Places the same smash for the next day once it is executed.
@@ -309,10 +327,10 @@ chrome.alarms.onAlarm.addListener(function( alarm ) {
 			});
 			alarmcounter++;
 									
-		};//
+		}//
 						//console.log("Nothing to smash");
 
-	};
+	}
 
 });
 	
@@ -460,12 +478,12 @@ chrome.alarms.onAlarm.addListener(function( alarm ) {
 							
 							//////////////////////////////////
 							
-			};//
+			}//
 						//console.log("Nothing to smash");
 
-		};
+		}
 
-	};
+	}
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////	
 ///////////////////////////////////////////////////////////
@@ -496,7 +514,7 @@ chrome.runtime.onConnect.addListener(function(port) {
 	function getallalarms() {
 		chrome.alarms.getAll(function(alarms){
 			if(alarms.length === 1){var smashsinplu = "Nothing™";
-			}else{smashsinplu = "Nothings™"};
+			}else{smashsinplu = "Nothings™";}
 			var notification2 = new Notification(getMessages(), {
 				icon: 'icons/icon48.png',
 				body: alarms.length + " " + smashsinplu + " to run.",
@@ -514,7 +532,7 @@ chrome.runtime.onConnect.addListener(function(port) {
 			port.postMessage({question: "Who's there?"});
 		}, 3000); 
 		
-	};
+	}
 	
 	// Clears all alarms in queue
 	function clearAlarms() {
@@ -531,7 +549,7 @@ chrome.runtime.onConnect.addListener(function(port) {
 		chrome.alarms.clear("alarms");
 		chrome.alarms.onAlarm.removeListener(alarms);
 		getallalarms();
-	};
+	}
 	
 });
 

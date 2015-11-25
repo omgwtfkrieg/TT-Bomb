@@ -1,6 +1,6 @@
 {
   "name": "π-BOMB : App built for nothing.",
-  "version": "1.0.6",
+  "version": "1.0.8",
   "manifest_version": 2,
   "description": "The automation of your nothingness.",
   "homepage_url": "http://trololololololololololo.com/",
@@ -16,12 +16,15 @@
     ],
     "persistent": true
   },
-  "options_page": "src/options_custom/index.html",
-  "page_action": {
-    "default_icon": "icons/icon19.png",
-    "default_title": "page action demo",
-    "default_popup": "src/page_action/page_action.html"
+
+ "options_ui": {
+  
+    "page": "src/options_custom/index.html",
+   
+    "chrome_style": true
+ 
   },
+  
   "permissions": [
 	"background",
     "notifications",

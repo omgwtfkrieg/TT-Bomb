@@ -31,7 +31,7 @@ chrome.extension.sendMessage({method: "getsmashdata"}, function(response) {
 		
 		if(!!$("input[name*='MSG4']").val){
 			$("input[name=OK]").click();
-		};
+		}
 		$('*:contains("Accepted")').each(function(){
 			port.postMessage({didthis: "Smash Accepted"});
 		});

@@ -15,19 +15,53 @@ $(function() {
 			//dt.setDate(dt.getDate()+1);
 			//alert(dt); //Sat Jul 20 2013 00:00:00 GMT+0100 (GMT Daylight Time) 
 			//alert(dt.valueOf()); //1374274800000
+		
 			dt = (
 				dt.getHours() + ":" +
 				dt.getMinutes() + " " +
-				(dt.getMonth() ) + "/" +
+				(dt.getMonth()+1 ) + "/" +
 				dt.getDate() + "/" +
 				dt.getFullYear() 
 			);
-		$( '#queue_list ul').append( '<li><div class="collapsible-header"><i class="material-icons teal-text lighten-2-text">keyboard_arrow_right</i>' + alarm.name + '</div><div class="collapsible-body center-align"><p>' + dt + '</p></div></li>' );
-		$('.collapsible').collapsible({
-		  accordion : true, // A setting that changes the collapsible behavior to expandable instead of the default accordion style
-		});
-		$('#queue_list ul li:first div').addClass("active");
-		$("#queue_list ul li:first div i:contains('keyboard_arrow_right')").html("schedule");
+			
+			var getalarmdatetest = alarm.scheduledTime;
+			var getalarmdatetest2 = parseInt((""+getalarmdatetest).substring(0,13), 10);
+			var dttest = new Date(getalarmdatetest2);
+			//dt.setDate(dt.getDate()+1);
+			//alert(dt); //Sat Jul 20 2013 00:00:00 GMT+0100 (GMT Daylight Time) 
+			//alert(dt.valueOf()); //1374274800000
+		
+			dttest = (
+				(dttest.getMonth()+1 ) + "/" +
+				dttest.getDate() + "/" +
+				dttest.getFullYear() 
+			);
+			var getcurrenttimetest = alarm.scheduledTime;
+			var getcurrenttimetest2 = parseInt((""+getcurrenttimetest).substring(0,13), 10);
+			var currenttime = new Date(getcurrenttimetest2);
+			//dt.setDate(dt.getDate()+1);
+			//alert(dt); //Sat Jul 20 2013 00:00:00 GMT+0100 (GMT Daylight Time) 
+			//alert(dt.valueOf()); //1374274800000
+		
+			currenttime = (
+				(currenttime.getMonth()+1 ) + "/" +
+				currenttime.getDate() + "/" +
+				currenttime.getFullYear() 
+			);
+			if(dttest == currenttime) {
+				$( '#queue_list span.nextinqueue').empty();
+				$( '#queue_list span.nextinqueue').append( alarm.name+ " - " + dt);
+				return false;
+			} else { 
+				$( '#queue_list span.nextinqueue').append( "No smashes for today.");
+			}
+			
+
+		//$('.collapsible').collapsible({
+		//  accordion : true, // A setting that changes the collapsible behavior to expandable instead of the default accordion style
+		//});
+		//$('#queue_list ul li:first div').addClass("active");
+		//$("#queue_list ul li:first div i:contains('keyboard_arrow_right')").html("schedule");
 		//$( 'ul#queue_list').append( '<li>hello</li>' );
 		//console.log(alarm.name + " " + alarm.scheduledTime)
 		};
@@ -35,7 +69,7 @@ $(function() {
 		return false;
 		
 		
-	};
+	}
 	
 	
 	///////////////////////////////////////////////////////
@@ -95,7 +129,7 @@ $(function() {
 			"bInfo": false,
 			"bAutoWidth": false,
 			"fnCreatedRow": function (nRow, aData, iDataIndex) {
-				$(nRow).attr('id', 'row-' + iDataIndex) // this adds a custom row ID for each entry
+				$(nRow).attr('id', 'row-' + iDataIndex); // this adds a custom row ID for each entry
 			},
 	});
 	oTable = $('#myTable').DataTable();
@@ -116,7 +150,7 @@ $(function() {
 		var uuid = guid();
 		console.log($('#smashID').val() + " " + $('#smashType option:selected').text() + " " + $('#smashType').val() + " " + $('#timepicker').val() + " " + $('#uniqueID').val());
 		//checks if input fields are not empty, if they are it will show an alert message
-		if ($('#smashID').val() == '' || $('#smashType select option:selected').val() == '' || $('#timepicker').val() == '') {
+		if ($('#smashID').val() === '' || $('#smashType select option:selected').val() === '' || $('#timepicker').val() === '') {
 			$('#alert_placeholder').hide().html('<p class="flow-text red-text text-darken-1" id="alert_placeholder"><i class="small mdi-alert-warning yellow-text text-darken-2" style="float:left; margin:0 7px 0px 0;"></i>You missed a field!<a href="#"><i class="material-icons">clear</i></a></p>').fadeIn('slow');
 
 		} else {
