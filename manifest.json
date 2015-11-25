@@ -21,7 +21,7 @@
   
     "page": "src/options_custom/index.html",
    
-    "chrome_style": true
+    "chrome_style": false
  
   },
   

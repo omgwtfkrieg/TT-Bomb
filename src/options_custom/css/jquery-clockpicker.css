@@ -160,6 +160,7 @@
   outline: thin dotted;
   outline: 5px auto -webkit-focus-ring-color;
   outline-offset: -2px;
+  
 }
 .btn:hover,
 .btn:focus {
@@ -284,8 +285,9 @@
 }
 .clockpicker-tick.active,
 .clockpicker-tick:hover {
-	background-color: rgb(38, 166, 154);
-	background-color: rgba(38, 166, 154, .25);
+	color: #fff;
+	background-color: rgb(233, 30, 99);
+	background-color: rgba(233, 30, 99, .25);
 }
 .clockpicker-button {
 	background-image: none;
@@ -297,6 +299,7 @@
 	padding: 10px 0;
 }
 .clockpicker-button:hover {
+	color: #fff;
 	background-image: none;
 	background-color: #ebebeb;
 }
@@ -340,17 +343,17 @@
 .clockpicker-canvas-bearing,
 .clockpicker-canvas-fg {
 	stroke: none;
-	fill: rgb(38, 166, 154);
+	fill: rgb(233, 30, 99);
 }
 .clockpicker-canvas-bg {
 	stroke: none;
-	fill: rgb(38, 166, 154);
+	fill: rgb(233, 30, 99);
 }
 .clockpicker-canvas-bg-trans {
-	fill: rgba(38, 166, 154, .25);
+	fill: rgba(233, 30, 99, .25);
 }
 .clockpicker-canvas line {
-	stroke: rgb(38, 166, 154);
+	stroke: rgb(233, 30, 99);
 	stroke-width: 1;
 	stroke-linecap: round;
 	/*shape-rendering: crispEdges;*/

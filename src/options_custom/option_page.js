@@ -49,7 +49,7 @@ $(function() {
 				currenttime.getFullYear() 
 			);
 			if(dttest == currenttime) {
-				$( '#queue_list span.nextinqueue').empty();
+				//$( '#queue_list span.nextinqueue').empty();
 				$( '#queue_list span.nextinqueue').append( alarm.name+ " - " + dt);
 				return false;
 			} else { 
@@ -112,15 +112,16 @@ $(function() {
 		"data": [],
 
 		"aoColumns":[ 
-			{ "sTitle": "UID", "mData": "uuid" },
-			{ "sTitle": "Smash ID", "mData": "smashID" },
-			{ "sTitle": "Smash Type", "mData": "smashType" },
-			{ "sTitle": "Smash Value", "mData": "smash" },
-			{ "sTitle": "Time", "mData": "time" },
-			{ "sTitle": "Status", "mData": "status" },
-			{ "sTitle": "Remove", "mData": "button" },
+			{ "sTitle": "UID", "mData": "uuid", "sClass": "hide center-align" },
+			{ "sTitle": "ID", "mData": "smashID", "sClass": "center-align" },
+			{ "sTitle": "Type", "mData": "smashType", "sClass": "center-align" },
+			{ "sTitle": "Value", "mData": "smash", "sClass": "hide center-align"  },
+			{ "sTitle": "Time", "mData": "time", "sClass": "center-align" },
+			{ "sTitle": "Status", "mData": "status", "sClass": "center-align" },
+			{ "sTitle": "Remove", "mData": "button", "sClass": "center-align" },
 			
         ],
+		
 			"bStateSave": true,
 			"stateSave": true,
 			"bPaginate": false,
@@ -136,11 +137,11 @@ $(function() {
 	for (var i = 0; i < dataSet.length; i++) {
 		oTable.row.add(dataSet[i]).draw();
 		$("#myTable td:contains('no')").html("<i class='center-align material-icons teal-text lighten-2-text'>check</i>");
-		$('#myTable td').addClass("center-align");
+		//$('#myTable td').addClass("center-align");
 	}
 	////////////////////////////////////////////////////////
 	////////////////////////////////////////////////////////
-
+	//$('.dpass').hide();
 	///////////////////////////////////////////////////////
 	// Saves entries to localStorage in order for DataTable to read
 	////////////////////////////////////////////////////////
@@ -148,7 +149,7 @@ $(function() {
 	$('#Save').click(function () {
 		
 		var uuid = guid();
-		console.log($('#smashID').val() + " " + $('#smashType option:selected').text() + " " + $('#smashType').val() + " " + $('#timepicker').val() + " " + $('#uniqueID').val());
+		//console.log($('#smashID').val() + " " + $('#smashType option:selected').text() + " " + $('#smashType').val() + " " + $('#timepicker').val() + " " + $('#uniqueID').val());
 		//checks if input fields are not empty, if they are it will show an alert message
 		if ($('#smashID').val() === '' || $('#smashType select option:selected').val() === '' || $('#timepicker').val() === '') {
 			$('#alert_placeholder').hide().html('<p class="flow-text red-text text-darken-1" id="alert_placeholder"><i class="small mdi-alert-warning yellow-text text-darken-2" style="float:left; margin:0 7px 0px 0;"></i>You missed a field!<a href="#"><i class="material-icons">clear</i></a></p>').fadeIn('slow');
@@ -164,11 +165,12 @@ $(function() {
 				smash : $('#smashType').val(),
 				time : $('#timepicker').val(),
 				status: "no",
-				button: "<button class='delete btn waves-effect waves-light red lighten-2'><i class='material-icons'>clear</i></button>",
+				button: "<a class='delete red-text'><i class='material-icons'>delete</i></a>",
 				
 		};
 
 			oTable.row.add(tabledata).draw();
+			$("#myTable td:contains('no')").html("<i class='center-align material-icons teal-text lighten-2-text'>check</i>");
 			dataSet.push(tabledata);
 			localStorage.setItem('dataSet', JSON.stringify(dataSet));
 			//chrome.extension.sendRequest({ msg: "reloadalarm" }); setTimeout(alarmsqueue,1000);//runs the createalarm(); function in the background.js

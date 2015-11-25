@@ -60,9 +60,13 @@
 			width:5px;
 			background:#eee;
 	}
-			#scrollbar01::-webkit-scrollbar:horizontal
+			::-webkit-scrollbar:horizontal
 			{
 					height:5px;
+			}
+			::-webkit-scrollbar:vertical
+			{
+					width:5px;
 			}
 	::-webkit-scrollbar-button
 	{
@@ -80,7 +84,7 @@
 			}
 	::-webkit-scrollbar-thumb
 	{
-			background:#ffffff;
+			background:#e91e63;
 	}
 	::-webkit-scrollbar-corner
 	{
@@ -89,8 +93,9 @@
 
   body {
     display: flex;
-    min-height: 100vh;
+    min-height: 542px;
     flex-direction: column;
+	min-width: 600px;
   }
 
   main {
@@ -98,7 +103,45 @@
   }
   .card {
   overflow: visible;
+
   }
+  .delete {
+	cursor: hand;
+  }
+  .dropdown-content li>span {
+	color: #e91e63;
+  }
+    /* label color */
+   .input-field label {
+     color: #000;
+   }
+   /* label focus color */
+   .input-field input[type=text]:focus + label {
+     color: #000;
+   }
+   /* label underline focus color */
+   .input-field input[type=text]:focus {
+     border-bottom: 1px solid #000;
+     box-shadow: 0 1px 0 0 #000;
+   }
+   /* valid color */
+   .input-field input[type=text].valid {
+     border-bottom: 1px solid #000;
+     box-shadow: 0 1px 0 0 #000;
+   }
+   /* invalid color */
+   .input-field input[type=text].invalid {
+     border-bottom: 1px solid #000;
+     box-shadow: 0 1px 0 0 #000;
+   }
+   /* icon prefix focus color */
+   .input-field .prefix.active {
+     color: #000;
+   }
+   .text-primary {
+	  color: #e91e63;
+	}
+
   </style>
 	<script src="./jquery-1.11.1.min.js" type="text/javascript"></script>
 	<script src="./js/materialize.min.js" type="text/javascript"></script>
@@ -115,55 +158,59 @@
 
   <body id="options-page" class="grey lighten-5">
 
-	<header class="white-text red lighten-2">
-		<div class="red lighten-1" style="padding-top: 20px;"></div>
+	<header class="white-text blue darken-3">
 		<div class="col s12 center-align">
-			<div><h5 class="white-text">Options</h5></div>
+			<div><h5 class="white-text header">Options</h5></div>
 		</div>
+
+		<div class="fixed-action-btn horizontal click-to-toggle" >
+			<a class="btn-floating btn-large blue accent-4">
+				<i class="large material-icons">tune</i>
+			</a>
+			<ul>
+				
+				<li><a class="btn-floating teal tooltipped" id="addnothing" data-position="top" data-delay="50" data-tooltip="Add Smashes™"><i class="material-icons"><i class="material-icons">alarm_add</i></i></a></li>
+				<li><a class="btn-floating red tooltipped getalarms" data-position="top" data-delay="50" data-tooltip="Reload Smashes™"><i class="material-icons">update</i></a></li>
+				<li><a class="btn-floating purple tooltipped removealarms" data-position="top" data-delay="50" data-tooltip="Stop Smashes™"><i class="material-icons">stop</i></a></li>
+				<li><a class="btn-floating green tooltipped addalarms" data-position="top" data-delay="50" data-tooltip="Start Smashes™"><i class="material-icons">play_arrow</i></a></li>
+				<!-- <li><a class="waves-effect waves-light btn-large teal lighten-2 tooltipped testbutton" data-position="top" data-delay="50" data-tooltip="Test Smashes™"><i class="material-icons">toys</i></a></li> -->
+				<li><a class="btn-floating blue tooltipped reloadext" data-position="top" data-delay="50" data-tooltip="Reload App"><i class="material-icons">refresh</i></a></li>
+			</ul>
+		</div>
+
+		
         <!-- <p><a class="btn btn-lg btn-success" href="#" role="button">Sign up today</a></p> -->
-		<div class="divider"></div>
-		<div class="section center-align">
-		<a class="waves-effect waves-light btn teal lighten-2 tooltipped" id="addnothing" data-position="top" data-delay="50" data-tooltip="Add Smashes™"><i class="material-icons">playlist_add</i></a>
-		<a class="waves-effect waves-light btn teal lighten-2 tooltipped getalarms" data-position="top" data-delay="50" data-tooltip="Reload Smashes™"><i class="material-icons">cached</i></a>
-		<a class="waves-effect waves-light btn teal lighten-2 tooltipped removealarms" data-position="top" data-delay="50" data-tooltip="Stop Smashes™"><i class="material-icons">stop</i></a>
-		<a class="waves-effect waves-light btn teal lighten-2 tooltipped addalarms" data-position="top" data-delay="50" data-tooltip="Start Smashes™"><i class="material-icons">play_arrow</i></a>
-		<!-- <a class="waves-effect waves-light btn-large teal lighten-2 tooltipped testbutton" data-position="top" data-delay="50" data-tooltip="Test Smashes™"><i class="material-icons">toys</i></a> -->
-		<a class="waves-effect waves-light btn teal lighten-2 tooltipped reloadext" data-position="top" data-delay="50" data-tooltip="Reload App"><i class="material-icons">refresh</i></a>
-		</div>
 		<div class="divider"></div>
 	</header>
 	<main class="container">
 	<!-- <div class="black" style="padding-top: 20px; width: 0 auto;"></div> -->
-	<div class="row">
+<!-- 	<div class="row">
         <div class="" id="queue_list" >
-          <div class="card teal lighten-2">
-            <div class="card-content teal-text">
-              <span class="card-title">Next-in-Queue</span>
-              <span class="black-text nextinqueue"></span>
-            </div>
-          </div>
+			<div class="collection">
+				<a href="#!" class="collection-item">Next-in-Queue<span class="badge nextinqueue">1</span></a>
+			</div>
         </div>
-      </div>
+    </div> -->
 
-		<div class="col s9">
+	<div class="">
 			<div class="card addnothing grey lighten-5">
-				<div class="card-content white-text teal lighten-2">
+				<div class="card-content white-text blue darken-1">
 					<span class="card-title">Add Smash&#8482;</span>
 				</div>			
 				<div class="card-action white center-align">
 					<div id = "alert_placeholder"></div>
 					<form id="addsmashinqueue">
-						<div class="row center-align" id="addsmashes">
+						<div class="row" id="addsmashes">
 							<div class="input-field col s4">
-								<i class="mdi-action-payment prefix"></i>
+								<i class="material-icons prefix">credit_card</i>
 								<input name="smashID" id="smashID" type="text" class="validate" maxlength="5">
 								<label for="icon_prefix">Smash ID</label>
 							</div>
 							<!-- <div class="input-field col s3"> <i class="mdi-device-access-time prefix"></i> <input disabled id="uniqueID" type="text" class="validate"> <label class="active" for="first_name2">Unique ID</label> </div> -->
 							<div class="input-field col s4 clockpicker">
-								<i class="mdi-device-access-time prefix"></i>
+								<i class="material-icons prefix">event</i>
 								<input value="" id="timepicker" type="text" class="validate">
-								<label class="active" for="first_name2">Time</label>
+								<label class="active" for="first_name2">Schedule</label>
 							</div>
 							<div class="input-field col s4">
 								<select id="smashType">
@@ -177,22 +224,21 @@
 						</div>
 					</form>
 					<div class="center-align">
-						<button href="#" class="waves-effect waves-light btn red lighten-2" id="addnothingclose">Cancel</button>
-						<button href="#" class="waves-effect waves-light btn lighten-3" id="Save" name="Save" disabled>Save</button>
+						<button href="#" class="waves-effect waves-light btn red" id="addnothingclose">Cancel</button>
+						<button href="#" class="waves-effect waves-light btn green" id="Save" name="Save" disabled>Save</button>
 					</div>
 				</div>
-			  </div>
+			 </div>
 
 	
-		<div class="card teal lighten-2">
+		<div class="card blue darken-1">
 			<div class="card-content white-text">
 				<span class="card-title">Smashes&#8482;</span>
-				
             </div>
             <div class="card-action white grey-text text-darken-1">
-				<table id="myTable" class="table table-striped table-hover" cellspacing="0" width="100%"></table>
+				<table id="myTable" class="table" cellspacing="0" width="100%"></table>
             </div>
-          </div>
+        </div>
 	</div>
 </div> 
 </main> 
