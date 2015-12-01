@@ -260,18 +260,17 @@ chrome.alarms.onAlarm.addListener(function( alarm ) {
 			//////////////////////////////////////////////////////////////
 			// Places the same smash for the next day once it is executed.
 			//////////////////////////////////////////////////////////////
-			var time = json[i].time;
-			
-			var currentime = moment().hour();
-			var epochtime = moment(time).format("H");
-			var timestamp = moment(time).add(1, 'days').valueOf(); // adds a day to the smash.
-			
-			chrome.alarms.create(json[i].uuid, {
-				when: timestamp
-			});
-			timestamp = moment(timestamp).add(1, 'days');
-			json[i].time = moment(timestamp).toJSON();
+		/* 	var currentime = moment();
+			var checkifbefore = moment(json[i].time).isSame(currentime);
+			if (!checkifbefore){//checks if the date stored was scheduled before the current local time. If it is, it will schedule the alarm for the next day.
+				console.log("Yes! the stored date is before the current date."); */
+
+				
+			var time = moment(json[i].time).toJSON();
+			time = moment(time).add(1, 'days');
+			json[i].time = moment(time).toJSON();
 			localStorage.setItem('dataSet', JSON.stringify(json));
+			//}
 			/////////////////////////////////////
 			
 			alarmcounter++;
