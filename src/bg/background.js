@@ -1,16 +1,16 @@
 //Show page action icon in omnibar if it matches the URL specified
-// function checkForValidUrl(tabId, changeInfo, tab) {
+ function checkForValidUrl(tabId, changeInfo, tab) {
 
 //   If  'example.com' is the hostname for the tabs url.
-   // var a = document.createElement ('a');
-   // a.href = tab.url;
-   // if (a.hostname == "http://km2.timetrak.com:85/web.exe") {
+    var a = document.createElement ('a');
+    a.href = tab.url;
+    if (a.hostname == "http://km2.timetrak.com:85/web.exe") {
 //       ... show the page action.
-       // chrome.pageAction.show(tabId);
+        chrome.pageAction.show(tabId);
 //	   alert("timetrak web is opened");
 		
-   // }
-// };
+    }
+ };
 //Listen for any changes to the URL of any tab.
 // chrome.tabs.onUpdated.addListener(checkForValidUrl);
 //For highlighted tab as well
@@ -24,7 +24,7 @@ chrome.runtime.onInstalled.addListener(function(details){
 
     }else if(details.reason == "update"){
         var thisVersion = chrome.runtime.getManifest().version;
-        console.log("Updated from " + details.previousVersion + " to " + thisVersion + "!");
+        //console.log("Updated from " + details.previousVersion + " to " + thisVersion + "!");
 		//chrome.runtime.reload();
 
     }
@@ -77,32 +77,6 @@ var messages = [
 
 var currenttime;
 
-/////////////////////////////////////////
-// Notifications
-// function notifyMe() {
-  // if (!Notification) {
-    // alert('Notifications are supported in modern versions of Chrome, Firefox, Opera and Firefox.'); 
-    // return;
-  // }
-
-  // if (Notification.permission !== "granted")
-    // Notification.requestPermission();
-
-  // var notification = new Notification(getMessages(), {
-    // icon: 'icons/icon48.png',
-    // body: "π-Bomb was loaded.",
-  // });
-	// setTimeout(function(){
-		// notification.close();
-	// }, 3000); 
-  // notification.onclick = function () {
-    // window.open("http://stackoverflow.com/a/13328397/1269037");      
-  // };
-// };
-/////////////////////////////////////////
-//notifyMe();//runs the notifyMe function and shows notification to display when the extension is loaded then it closes after 2 seconds
-
-
 ////////////////////////////////////////
 // Alarm
 ////////////////////////////////////////
@@ -117,36 +91,29 @@ function createAlarm() {
 			
 		//if (json[i].time === currenttime && json[i].status === "no"){ //will stop and grab all data from the array that matches the time
 			
-		var time = json[i].time;
-		var tt = time.split(":");
-		console.log(tt[0] + "-" + tt[1]);
-				
-		var now = new Date();
-		//console.log(now);
-		var day = now.getDate();
-		if (tt[0] < now.getHours()) {
-			// If the smash already passed sets to try next day
-			day += 1;
-		}
-		if (tt[0] <= now.getHours() && tt[1] <= now.getMinutes()) {
-			// If the smash already passed sets to try next day
-			day += 1;
-		}
-		if (tt[0] == now.getHours() && tt[1] <= now.getMinutes()) {
-			// If the smash already passed sets to try next day
-			day += 1;
-			//console.log("it worked!");
-		}
+		var time = moment(json[i].time).toJSON();
+		console.log("bg " + time);
+		var currentime = moment();
+		//var epochtime = moment(time);
+		var timestamp = moment(time).valueOf();
+		//console.log("current time hour " + epochtime + " : " + currentime);
 		
-
-			// '+' casts the date to a number, like [object Date].getTime();
-		var timestamp = +new Date(now.getFullYear(), now.getMonth(), day, tt[0], tt[1], 0, 0);
-				//                        YYYY               MM      DD    HH     MM   SS MS
-				//console.log("We found something to smash");
-				console.log(timestamp);
-				console.log(now.getMonth());
-				//counter = i;
+		//Determines if the smash will be schedule for the same day or the day after.
+		//if (epochtime < currentime) {
+			//timestamp = moment(time).add(1, 'days').valueOf();
+			//json[i].time = moment(timestamp).toJSON();
+			//localStorage.setItem('dataSet', JSON.stringify(json));
+		//}
 		
+		var checkifbefore = moment(time).isBefore(currentime);
+		if (checkifbefore){//checks if the date stored was scheduled before the current local time. If it is, it will schedule the alarm for the next day.
+			console.log("Yes! the stored date is before the current date.");
+			timestamp = moment(timestamp).add(1, 'days');
+			json[i].time = moment(timestamp).toJSON();
+			localStorage.setItem('dataSet', JSON.stringify(json));
+		}
+		console.log("Timestamp for alarm: " + time)
+		console.log("Timestamp for UUID: " + json[i].uuid)
 		// Creates Alarm and assigns a timestamp		
 		chrome.alarms.create(json[i].uuid, {
 			when: timestamp
@@ -154,66 +121,49 @@ function createAlarm() {
 		
 		alarmcounter++;
 				 
-		 chrome.alarms.getAll(function(alarms){
 
-			 for(i=0;i<alarms.length;i++){
-				 console.log("There is/are:  " + alarms.length + " alarms in queue.");
-				 console.log("Alarm ID:  " + alarms[0].name +" | Alarm Time:  " + alarms[0].scheduledTime);
-						
-				 }
-		 });
 		
 	}
-		
-/* 	chrome.alarms.getAll(function(alarms){
-			if(alarms.length === 1){var smashsinplu = "Nothing™";
-			}else{smashsinplu = "Nothings™";}
-			var notification2 = new Notification(getMessages(), {
-				icon: 'icons/icon48.png',
-				body: alarms.length + " " + smashsinplu + " to run.",
-			});
+		chrome.alarms.getAll(function(alarms){
+
+			for(i=0;i<alarms.length;i++){
+			console.log("There is/are:  " + alarms.length + " alarms in queue.");
+			console.log("Alarm ID:  " + alarms[i].name +" | Alarm Time:  " + alarms[i].scheduledTime);
+						
+			}
+		});
+
+	chrome.alarms.getAll(function(alarms){
+			if(alarms.length === 1){var smashsinplu = "Smashes™";
+			}else{smashsinplu = "Smashes™";}
 			
-			setTimeout(function(){
-				notification2.close();	
-			}, 3000); 
-			
-			//console.log(alarm);
-		});	 */
-		
-	chrome.notifications.create('iniappnoti',{
+		chrome.notifications.create('iniappnoti',{
 			type:'basic',
-			title:'Smashes added to the queue...',
+			title: alarms.length + " " + smashsinplu +' added to the queue...',
 			iconUrl: 'icons/icon128.png',
 			message: getMessages(),
 			expandedMessage:'Hello thanks for using our app',
 			priority:1,
 			buttons:[{title:'Options', iconUrl: 'icons/ic_settings_black_18dp.png'}],
 			isClickable:true
-	},function(id) {
-		myNotificationID = id;
-	});
+		},function(id) {
+			myNotificationID = id;
+		});
 
-	setTimeout(function(){
-		chrome.notifications.clear('iniappnoti');
-	}, 3000);
-	chrome.notifications.onButtonClicked.addListener(function(notifId, btnIdx) {
-		if (notifId === myNotificationID) {
-			if (btnIdx === 0) {
-				chrome.tabs.create({url: 'chrome://extensions/?options=' + chrome.runtime.id});
-			} else if (btnIdx === 1) {
+		setTimeout(function(){
+			chrome.notifications.clear('iniappnoti');
+		}, 3000);
+		chrome.notifications.onButtonClicked.addListener(function(notifId, btnIdx) {
+			if (notifId === myNotificationID) {
+				if (btnIdx === 0) {
+					chrome.tabs.create({url: 'chrome://extensions/?options=' + chrome.runtime.id});
+				} else if (btnIdx === 1) {
 					//alert("button2");
+				}
 			}
-		}
+		});
 	});
 	
-	var alarmLogger = function(alarm){ console.log(alarm.name + " " + alarm.scheduledTime); };
-		chrome.alarms.getAll(function(alarms){ alarms.forEach(alarmLogger); });
-		
-		//$( 'ul#queue_list').append( '<li>works</li>' );
-
-		//getallalarms();
-
-					//console.log(alarm.name);
 }//End of createAlarm
 createAlarm(); // Initializes function on app load
 	
@@ -239,9 +189,7 @@ chrome.alarms.onAlarm.addListener(function( alarm ) {
 		chrome.notifications.clear('inismash');
 	}, 3000);
 	
-					//checkitemdate();
-					///////////////////////////////////////////////////////////
-					///////////////////////////////////////////////////////////
+
   function createtab() {
     chrome.tabs.create({'url': "http://km2.timetrak.com:85/web.exe?sp2application=079950102ClocTrak", active: false, selected: false,  }, function(tab){ 
 				console.log("Success! | Tab ID: " + tab.id + " created.");
@@ -300,7 +248,7 @@ chrome.alarms.onAlarm.addListener(function( alarm ) {
 		//goes through all the smashes in localstorage and compares it with the alarm in queue, if one UUID matches with the alarm it grabs all the data
 		if (json[i].uuid === alarm.name){ //will stop and grab all data from the array that matches the time
 
-			console.log("Found Smash UUID: " + json[i].uuid + " time: " + json[i].time + " that matched alarm: " + alarm.name);
+			console.log("Found Smash UUID: " + json[i].uuid + " time: " + json[i].time + " that matched scheduled alarm: " + alarm.name);
 			counter = i;
 
 			createtab();
@@ -313,22 +261,22 @@ chrome.alarms.onAlarm.addListener(function( alarm ) {
 			// Places the same smash for the next day once it is executed.
 			//////////////////////////////////////////////////////////////
 			var time = json[i].time;
-			var tt = time.split(":");
-							//console.log(tt[0] + "-" + tt[1]);
-							
-			var now = new Date();
-			var day = now.getDate();
-			day += 1;
-							
-							// '+' casts the date to a number, like [object Date].getTime();
-			var timestamp = +new Date(now.getFullYear(), now.getMonth(), day, tt[0], tt[1], 0, 0);
+			
+			var currentime = moment().hour();
+			var epochtime = moment(time).format("H");
+			var timestamp = moment(time).add(1, 'days').valueOf(); // adds a day to the smash.
+			
 			chrome.alarms.create(json[i].uuid, {
 				when: timestamp
 			});
+			timestamp = moment(timestamp).add(1, 'days');
+			json[i].time = moment(timestamp).toJSON();
+			localStorage.setItem('dataSet', JSON.stringify(json));
+			/////////////////////////////////////
+			
 			alarmcounter++;
 									
-		}//
-						//console.log("Nothing to smash");
+		}
 
 	}
 
@@ -496,12 +444,7 @@ chrome.alarms.onAlarm.addListener(function( alarm ) {
 chrome.runtime.onConnect.addListener(function(port) {
 //console.assert(port.name == "knockknock");
 	port.onMessage.addListener(function(msg) {
-		if (msg.joke == "Knock knock"){
-			
-			getallalarms();
-			//port.postMessage({question: "Who's there?"});
-		}
-		else if (msg.answer == "Remove Alarms")
+		if (msg.answer == "Remove Alarms")
 			//port.postMessage({question: "Madame who?"});
 			clearAlarms();
 		else if (msg.answer == "Create Alarms")
@@ -510,46 +453,29 @@ chrome.runtime.onConnect.addListener(function(port) {
 			testsmash();
 	});
   
-	//Function that shows the current smashes in queue
-	function getallalarms() {
-		chrome.alarms.getAll(function(alarms){
-			if(alarms.length === 1){var smashsinplu = "Nothing™";
-			}else{smashsinplu = "Nothings™";}
-			var notification2 = new Notification(getMessages(), {
-				icon: 'icons/icon48.png',
-				body: alarms.length + " " + smashsinplu + " to run.",
-			});
-			
-			setTimeout(function(){
-				notification2.close();	
-			}, 3000); 
-			
-			//console.log(alarm);
-		});
-		
-		setTimeout(function(){
-			//chrome.runtime.sendMessage({ elementaction: "btnstopspinning" });
-			port.postMessage({question: "Who's there?"});
-		}, 3000); 
-		
-	}
-	
 	// Clears all alarms in queue
 	function clearAlarms() {
-		
-		var notification5 = new Notification(getMessages(), {
-			icon: 'icons/icon48.png',
-			body: "Nothing™ to run",
-		});
-						  
-		setTimeout(function(){
-			notification5.close();
-		}, 3000); 
 		chrome.alarms.clearAll();
 		chrome.alarms.clear("alarms");
-		chrome.alarms.onAlarm.removeListener(alarms);
-		getallalarms();
+		chrome.alarms.onAlarm.removeListener("alarms");
+		chrome.notifications.create('clearsmashnoti',{
+			type:'basic',
+			title: 'Smashes™ removed from the queue.',
+			iconUrl: 'icons/icon128.png',
+			message: getMessages(),
+			expandedMessage:'Hello thanks for using our app',
+			priority:1,
+		},function(id) {
+			myNotificationID = id;
+		});
+
+		setTimeout(function(){
+			chrome.notifications.clear('clearsmashnoti');
+		}, 3000);
 	}
+	
+	
+	
 	
 });
 

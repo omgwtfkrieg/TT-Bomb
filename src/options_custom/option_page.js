@@ -1,12 +1,13 @@
 $(function() {
 	$(document).ready(function(){
 		$('.tooltipped').tooltip({delay: 50});
-		smashes_pending();
+		//smashes_pending();
 	});
-	
-	function smashes_pending() {
+	moment().format();
+	/* function smashes_pending() {
 		$( "#queue_list ul li" ).empty();
 		//port.postMessage({answer: "Test"});var alarmLogger = function(alarm){ console.log(alarm.name + " " + alarm.scheduledTime) };
+		var allalarms;
 		var alarmsqlist = function(alarm){
 			//myDate = new Date(1000*alarm.scheduledTime);
 			var epoch = alarm.scheduledTime;
@@ -50,7 +51,14 @@ $(function() {
 			);
 			if(dttest == currenttime) {
 				//$( '#queue_list span.nextinqueue').empty();
-				$( '#queue_list span.nextinqueue').append( alarm.name+ " - " + dt);
+				console.log(alarm.name);
+				console.log(alarm.name + " " + alarm.scheduledTime)
+				//var alarmname = alarm.name;
+				allalarms =+ " " + dt + " ";
+				console.log(allalarms);
+				$( '#queue_list div.chip span').after().append(allalarms);
+				
+				
 				return false;
 			} else { 
 				$( '#queue_list span.nextinqueue').append( "No smashes for today.");
@@ -68,8 +76,8 @@ $(function() {
 		chrome.alarms.getAll(function(alarms){ alarms.forEach(alarmsqlist); });
 		return false;
 		
-		
-	}
+	
+	} */
 	
 	
 	///////////////////////////////////////////////////////
@@ -137,6 +145,14 @@ $(function() {
 	for (var i = 0; i < dataSet.length; i++) {
 		oTable.row.add(dataSet[i]).draw();
 		$("#myTable td:contains('no')").html("<i class='center-align material-icons teal-text lighten-2-text'>check</i>");
+		$("#myTable td:contains('deleteme')").html("<a class='delete red-text'><i class='material-icons'>delete</i></a>");
+		
+		//will convert epoch to human in the tables
+		var momentdatasettime = dataSet[i].time;
+		console.log(momentdatasettime);
+		var momenttableop = moment(momentdatasettime).format("MMMM Do YYYY, h:mm:ss a");
+		$("#myTable td:contains('" + momentdatasettime + "')").html("" + momenttableop + "");
+		console.log( momenttableop);
 		//$('#myTable td').addClass("center-align");
 	}
 	////////////////////////////////////////////////////////
@@ -155,7 +171,19 @@ $(function() {
 			$('#alert_placeholder').hide().html('<p class="flow-text red-text text-darken-1" id="alert_placeholder"><i class="small mdi-alert-warning yellow-text text-darken-2" style="float:left; margin:0 7px 0px 0;"></i>You missed a field!<a href="#"><i class="material-icons">clear</i></a></p>').fadeIn('slow');
 
 		} else {
-
+			var timepicker = $('#timepicker').val();
+			var tt = timepicker.split(":");
+			var momentnow = moment().hour(tt[0]).minutes(tt[1]).local().toJSON(); //uses moment.js to grab current local date and adds the time to epoch
+			//momentnow1 = JSON.stringify(momentnow);
+			var currentime = moment();
+			var checkifbefore = moment(momentnow).isBefore(currentime);
+			if (checkifbefore){
+				console.log("Yes! the stored date is before the current date.");
+				momentnow = moment(momentnow).add(1, 'days').toJSON();
+				//var json = JSON.parse(localStorage.getItem("dataSet"));
+				//dataSet.time = moment(momentnow).toJSON();
+				//localStorage.setItem('dataSet', JSON.stringify(dataSet));
+			}
 			
 			var tabledata; 
 			tabledata = {
@@ -163,16 +191,22 @@ $(function() {
 				smashID : $('#smashID').val(),
 				smashType : $('#smashType option:selected').text(),
 				smash : $('#smashType').val(),
-				time : $('#timepicker').val(),
+				time : momentnow,
 				status: "no",
-				button: "<a class='delete red-text'><i class='material-icons'>delete</i></a>",
+				button: "deleteme",
 				
 		};
 
 			oTable.row.add(tabledata).draw();
 			$("#myTable td:contains('no')").html("<i class='center-align material-icons teal-text lighten-2-text'>check</i>");
+			$("#myTable td:contains('deleteme')").html("<a class='delete red-text'><i class='material-icons'>delete</i></a>");
+			
+			var momenttableop = moment(momentnow).format("MMMM Do YYYY, h:mm:ss a");
+			$("#myTable td:contains('" + momentnow + "')").html("" + momenttableop + "");
+				
 			dataSet.push(tabledata);
 			localStorage.setItem('dataSet', JSON.stringify(dataSet));
+			
 			//chrome.extension.sendRequest({ msg: "reloadalarm" }); setTimeout(alarmsqueue,1000);//runs the createalarm(); function in the background.js
 				//$( ".addnothing" ).hide("slow").empty();
 				//$('.addnothing').fadeToggle( "fast", "linear" );
@@ -181,7 +215,7 @@ $(function() {
 				$('#Save').prop("disabled", true);
 				$('.addnothing').fadeToggle( "fast", "linear" );
 		}
-
+	port.postMessage({answer: "Create Alarms"});
 	return false;
 	});
 	
@@ -203,6 +237,7 @@ $(function() {
 		return false;
 
 	});
+	
 	// close button action, will hide and reset values from the addnothing form
 	$('#addnothingclose').click(function () {
 		$('select').material_select();
@@ -217,14 +252,6 @@ $(function() {
 		return false;
 	});
 
-	//$(".alarmsinq").click(function (){alarmsqueue();});
-
-	$('.getalarms').click(function () {//chrome.extension.sendRequest({ msg: "createalarm" }); //runs the createalarm(); function in the background.js
-		//chrome.runtime.sendMessage({ msg: "createalarm" });
-		port.postMessage({joke: "Knock knock"});
-		$('.getalarms i').addClass('spin');	
-		return false;
-	});
 	$(".addalarms").click(function () {//chrome.extension.sendRequest({ msg: "clearalarms" }); //runs the clearalarm(); function in the background.js
 		port.postMessage({answer: "Create Alarms"});
 		return false;
@@ -236,7 +263,7 @@ $(function() {
 	});
 	$('.testbutton').click(function () {
 		$( "ul#queue_list li" ).empty();
-		//port.postMessage({answer: "Test"});var alarmLogger = function(alarm){ console.log(alarm.name + " " + alarm.scheduledTime) };
+		port.postMessage({answer: "Test"});var alarmLogger = function(alarm){ console.log(alarm.name + " " + alarm.scheduledTime) };
 		var alarmsqlist = function(alarm){
 			//myDate = new Date(1000*alarm.scheduledTime);
 			var epoch = alarm.scheduledTime;
@@ -272,7 +299,7 @@ $(function() {
 		$(".addnothing").fadeToggle( "fast", "linear" );//adds the fade in animation to the form when loading
 		return false;
 	});
-	$('.clockpicker').clockpicker({donetext: 'Done',autoclose: true,align: 'right',});//initialize the clock picker in the time input box
+	$('.clockpicker').clockpicker({donetext: 'Done',autoclose: true,});//initialize the clock picker in the time input box
 	$('select').material_select();//initialize the select option for materialize
 	$('#smashID').keyup(function() {//enables the save button once smash ID meets the 5 character long criteria
 		if($(this).val().length == 5 ) {
