@@ -1,4 +1,10 @@
 //Show page action icon in omnibar if it matches the URL specified
+//Checks if dataSet key exists if not it creates it
+	if (localStorage.getItem("dataSet") === null) {
+		setdataSet = [];
+		localStorage.setItem('dataSet', JSON.stringify(setdataSet));
+	}
+
  function checkForValidUrl(tabId, changeInfo, tab) {
 
 //   If  'example.com' is the hostname for the tabs url.
