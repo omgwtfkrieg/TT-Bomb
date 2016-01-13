@@ -97,8 +97,9 @@ function createAlarm() {
 			
 		//if (json[i].time === currenttime && json[i].status === "no"){ //will stop and grab all data from the array that matches the time
 			
-		var time = moment(json[i].time).toJSON();
-		console.log("bg " + time);
+		var time = moment(json[i].time);
+		console.log("Unix Offset: " + time);
+		//console.log("not Serialized " + json[i].time);
 		var currentime = moment();
 		//var epochtime = moment(time);
 		var timestamp = moment(time).valueOf();
@@ -112,14 +113,20 @@ function createAlarm() {
 		//}
 		
 		var checkifbefore = moment(time).isBefore(currentime);
+		//var checkifafter = moment(time).isAfter(currentime);
+		
 		if (checkifbefore){//checks if the date stored was scheduled before the current local time. If it is, it will schedule the alarm for the next day.
 			console.log("Yes! the stored date is before the current date.");
 			timestamp = moment(timestamp).add(1, 'days');
 			json[i].time = moment(timestamp).toJSON();
+			console.log ("this is what you get: " + timestamp)
 			localStorage.setItem('dataSet', JSON.stringify(json));
+		//}//else if (checkifafter){
+			//console.log ("this is what you get: " + timestamp)
 		}
 		console.log("Timestamp for alarm: " + time)
 		console.log("Timestamp for UUID: " + json[i].uuid)
+		console.log ("this is what you get: " + timestamp)
 		// Creates Alarm and assigns a timestamp		
 		chrome.alarms.create(json[i].uuid, {
 			when: timestamp
@@ -234,14 +241,14 @@ chrome.alarms.onAlarm.addListener(function( alarm ) {
 						console.log( "Success! | Smashed Accepted" );
 						//chrome.tabs.remove(tabID);
 					}else if (msg.didthis == "Close Tab - Session Terminated"){
-						console.log( "Tab closed | Session Terminated" );
+						console.error( "Tab closed | Session Terminated" );
 						chrome.tabs.remove(tabID);
 					}else if (msg.didthis == "Close Tab - HAVE A NICE DAY"){
 						console.log( "Success! | Smash completed: HAVE A NICE DAY" );
 						chrome.tabs.remove(tabID);
 					}
 					else if (msg.didthis == "Close Tab - Cancelled"){
-						console.log( "Tab closed | Cancelled" );
+						console.error( "Tab closed | Cancelled" );
 						chrome.tabs.remove(tabID);
 					}
 				});
