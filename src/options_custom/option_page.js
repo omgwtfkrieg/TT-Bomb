@@ -149,10 +149,10 @@ $(function() {
 		
 		//will convert epoch to human in the tables
 		var momentdatasettime = dataSet[i].time;
-		console.log(momentdatasettime);
+		//console.log(momentdatasettime);
 		var momenttableop = moment(momentdatasettime).format("MMMM Do YYYY, h:mm:ss a");
 		$("#myTable td:contains('" + momentdatasettime + "')").html("" + momenttableop + "");
-		console.log( momenttableop);
+		//console.log( momenttableop);
 		//$('#myTable td').addClass("center-align");
 	}
 	////////////////////////////////////////////////////////
@@ -178,7 +178,7 @@ $(function() {
 			var currentime = moment();
 			var checkifbefore = moment(momentnow).isBefore(currentime);
 			if (checkifbefore){
-				console.log("Yes! the stored date is before the current date.");
+				//console.log("Yes! the stored date is before the current date.");
 				momentnow = moment(momentnow).add(1, 'days').toJSON();
 				//var json = JSON.parse(localStorage.getItem("dataSet"));
 				//dataSet.time = moment(momentnow).toJSON();

@@ -27,6 +27,13 @@
  
   },
   
+  "content_scripts": [
+    {
+      "matches": ["http://km2.timetrak.com:85/*"],
+      "js": ["src/js/moment.js","src/inject/inject.js"]
+    }
+  ],
+  
   "permissions": [
 	"background",
     "notifications",

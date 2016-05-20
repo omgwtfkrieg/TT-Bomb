@@ -224,8 +224,9 @@ chrome.alarms.onAlarm.addListener(function( alarm ) {
 				if (request.method == 'getsmashdata') {
 					var objectsmashIDString = json[counter].smashID;
 					var objectsmashString = json[counter].smash;
-					var objectstatusString = json[counter].status;							
-					sendResponse({data1: objectsmashIDString, data2: objectsmashString, data3: objectstatusString});
+					var objectstatusString = json[counter].status;
+					var objecttimeString = json[counter].time;					
+					sendResponse({data1: objectsmashIDString, data2: objectsmashString, data3: objectstatusString, data4: objecttimeString});
 				} else {
 					sendResponse({}); // snub them.
 				}
@@ -316,15 +317,20 @@ chrome.alarms.onAlarm.addListener(function( alarm ) {
 							
 			//listens to the tab recently created by ID and makes sure to add the inject.js
 			//including the jquery library every time it changes/updates etc...
-			chrome.tabs.onUpdated.addListener(function(tabID, info, tab) {
+/* 			chrome.tabs.onUpdated.addListener(function(tabID, info, tab) {
 				chrome.tabs.executeScript(tab.id, { file: 'src/options_custom/jquery-1.11.1.min.js', runAt : 'document_start' }, function(tab) {
+					chrome.tabs.executeScript(tabID, { 
+						file : 'src/js/moment.js',
+						runAt : 'document_start'
+					});
+
+				}, function(tab) {
 					chrome.tabs.executeScript(tabID, { 
 						file : 'src/inject/inject.js',
 						runAt : 'document_start'
 					});
-
 				});
-			});
+			}); */
 							
 							
 			//Lets send the smash data from the matching array to the inject.js script
