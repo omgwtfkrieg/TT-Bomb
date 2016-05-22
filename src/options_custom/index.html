@@ -8,7 +8,6 @@
 
     <title>π-Bomb options</title>
 
-    <!-- Bootstrap core CSS -->
     <link rel="stylesheet" href="./css/materialize.min.css">
 	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link rel="stylesheet" href="./css/jquery-clockpicker.css">
@@ -95,7 +94,7 @@
     display: flex;
     min-height: 542px;
     flex-direction: column;
-	min-width: 600px;
+	min-width: 768px;
   }
 
   main {
@@ -104,6 +103,9 @@
   .card {
   overflow: visible;
 
+  }
+  .card .card-action {
+  z-index: inherit !important;
   }
   .delete {
 	cursor: hand;
@@ -141,7 +143,6 @@
    .text-primary {
 	  color: #e91e63;
 	}
-
   </style>
 	<script src="./jquery-1.11.1.min.js" type="text/javascript"></script>
 	<script src="./js/materialize.min.js" type="text/javascript"></script>
@@ -149,12 +150,7 @@
 	<script src="./js/moment.js" type="text/javascript"></script>
 	<script src="./option_page.js" type="text/javascript"></script>
 	<script src="./jquery.dataTables.js" type="text/javascript"></script>
-	
-    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
-    <!--[if lt IE 9]>
-      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
-      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
-    <![endif]-->
+
   </head>
 
   <body id="options-page" class="grey lighten-5">
@@ -164,60 +160,50 @@
 			<div><h5 class="white-text header">Options</h5></div>
 		</div>
 
-		<div class="fixed-action-btn horizontal click-to-toggle" >
-			<a class="btn-floating btn-large blue accent-4">
+		<div class="fixed-action-btn click-to-toggle" >
+			<a class="btn-floating btn-large red darken-1">
 				<i class="large material-icons">tune</i>
 			</a>
 			<ul>
 				<li><a class="btn-floating teal tooltipped" id="addnothing" data-position="top" data-delay="50" data-tooltip="Add Smashes™"><i class="material-icons"><i class="material-icons">alarm_add</i></i></a></li>
 				<li><a class="btn-floating purple tooltipped removealarms" data-position="top" data-delay="50" data-tooltip="Stop Smashes™"><i class="material-icons">stop</i></a></li>
 				<li><a class="btn-floating green tooltipped addalarms" data-position="top" data-delay="50" data-tooltip="Start Smashes™"><i class="material-icons">play_arrow</i></a></li>
-				<!-- <li><a class="waves-effect waves-light btn-large teal lighten-2 tooltipped testbutton" data-position="top" data-delay="50" data-tooltip="Test Smashes™"><i class="material-icons">toys</i></a></li> -->
 				<li><a class="btn-floating blue tooltipped reloadext" data-position="top" data-delay="50" data-tooltip="Reload App"><i class="material-icons">refresh</i></a></li>
 			</ul>
 		</div>
 
-		
-        <!-- <p><a class="btn btn-lg btn-success" href="#" role="button">Sign up today</a></p> -->
 		<div class="divider"></div>
 	</header>
 	<main class="container">
-	<!-- <div class="black" style="padding-top: 20px; width: 0 auto;"></div> -->
-<!-- 	<div class="row">
-        <div class="" id="queue_list" >
-			<div class="collection">
-				<a href="#!" class="collection-item">Next-in-Queue<span class="badge nextinqueue">1</span></a>
-			</div>
-        </div>
-    </div> -->
-	<!-- <div class="section" id="queue_list">
-	
-		<div class="chip">
-			<span>Next-in-Queue: </span>
-			<i class="material-icons">close</i>
-		</div>
-		
-	</div> -->
 	<div class="">
 			<div class="card addnothing grey lighten-5">
 				<div class="card-content white-text blue darken-1">
 					<span class="card-title">Add Smash&#8482;</span>
 				</div>			
-				<div class="card-action white center-align">
+				<div class="card-action white">
 					<div id = "alert_placeholder"></div>
 					<form id="addsmashinqueue">
 						<div class="row" id="addsmashes">
+							<div class="input-field col s2">
+								<input placeholder="40000" name="smashID" id="smashID" type="text" class="validate" maxlength="5" length="5">
+								<label>Smash ID</label>
+							</div>
+							<div class="input-field col s2 clockpicker">
+								<input placeholder="00:00" value="" id="timepicker" type="text" class="validate">
+								<label class="active">Schedule</label>
+							</div>
 							<div class="input-field col s4">
-								<i class="material-icons prefix">credit_card</i>
-								<input name="smashID" id="smashID" type="text" class="validate" maxlength="5">
-								<label for="icon_prefix">Smash ID</label>
-							</div>
-							<!-- <div class="input-field col s3"> <i class="mdi-device-access-time prefix"></i> <input disabled id="uniqueID" type="text" class="validate"> <label class="active" for="first_name2">Unique ID</label> </div> -->
-							<div class="input-field col s4 clockpicker">
-								<i class="material-icons prefix">event</i>
-								<input value="" id="timepicker" type="text" class="validate">
-								<label class="active" for="first_name2">Schedule</label>
-							</div>
+								<select multiple id="multipleSelect">
+									<option value="1">Monday</option>
+									<option value="2">Tuesday</option>
+									<option value="3">Wednesday</option>
+									<option value="4">Thursday</option>
+									<option value="5">Friday</option>
+									<option value="6">Saturday</option>
+									<option value="7">Sunday</option>
+								</select>
+								<label>Day(s)</label>
+							 </div>
 							<div class="input-field col s4">
 								<select id="smashType">
 									<option value="FN1">In for the day</option>
@@ -248,32 +234,5 @@
 	</div>
 </div> 
 </main> 
-	<!-- <footer class="page-footer grey lighten-1">
-		<div class="container">
-			<div class="row">
-				<div class="col l6 s12">
-					<h5 class="white-text">Footer Content</h5>
-					<p class="grey-text text-lighten-4">You can use rows and columns here to organize your footer content.</p>
-				</div>
-				<div class="col l4 offset-l2 s12">
-					<h5 class="white-text">Links</h5>
-					<ul>
-						<li><a class="grey-text text-lighten-3" href="#!">Link 1</a></li>
-						<li><a class="grey-text text-lighten-3" href="#!">Link 2</a></li>
-						<li><a class="grey-text text-lighten-3" href="#!">Link 3</a></li>
-						<li><a class="grey-text text-lighten-3" href="#!">Link 4</a></li>
-					</ul>
-				</div>
-            </div>
-		</div>
-		<div class="footer-copyright grey darken-1">
-			<div class="container">
-				© Your mom 2015
-				<a class="grey-text text-lighten-4 right" href="#!">More Links</a>
-			</div>
-		</div>
-	</footer> -->
-    <!-- /container -->
-
 
 </body></html>

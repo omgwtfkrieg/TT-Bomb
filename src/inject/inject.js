@@ -14,7 +14,7 @@ chrome.extension.sendMessage({method: "getsmashdata"}, function(response) {
 	var now_day = moment().day();
 	
 	time = moment(time);
-	//console.log(time + " = " + now);
+	//console.log(smashID);
 	//var foundin = $('*:contains("Honduras KM2")');
 	//console.log("smash time hour: " + time_hour + " now_hour: " + now_hour);
 	if ( time_hour == now_hour && time_minute == now_minute){

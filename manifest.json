@@ -42,6 +42,7 @@
 	"alarms",
     "https://*/*",
 	"http://*/*",
+	"http://*/",
 	"webNavigation"
   ]
 }
