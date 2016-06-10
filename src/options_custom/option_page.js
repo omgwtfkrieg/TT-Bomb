@@ -117,7 +117,8 @@ $(function() {
 		} else {
 			var timepicker = $('#timepicker').val();
 			var tt = timepicker.split(":");
-			var momentnow = moment().hour(tt[0]).minutes(tt[1]).local().valueOf(); //uses moment.js to grab current local date and adds the time to epoch
+			var momentnow = moment().hour(tt[0]).minutes(tt[1]).valueOf(); //uses moment.js to grab current local date and adds the time to epoch
+			//momentnow = moment(momentnow).unix();
 			var currentime = moment();
 			var checkifbefore = moment(momentnow).isBefore(currentime);
 			if (checkifbefore){

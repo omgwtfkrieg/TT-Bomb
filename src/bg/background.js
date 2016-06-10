@@ -69,6 +69,7 @@ function createAlarm() {
 		var time = moment(json[i].time);
 		var currentime = moment();
 		var timestamp = moment(time).valueOf();	
+		timestamp = Number(timestamp);
 		
 		var checkifbefore = moment(time).isBefore(currentime);
 		
@@ -79,8 +80,8 @@ function createAlarm() {
 		
 		//checks if the date stored was scheduled before the current local time. If it is, it will schedule the alarm for the next day.
 		if (checkifbefore){
-			timestamp = moment(timestamp).add(1, 'days').minute(random);
-			json[i].time = moment(timestamp).toJSON();
+			timestamp = moment(timestamp).add(1, 'days').minute(random).valueOf();
+			json[i].time = moment(timestamp);
 			localStorage.setItem('dataSet', JSON.stringify(json));
 		}
 		
@@ -128,13 +129,13 @@ function createAlarm() {
 			chrome.notifications.clear('iniappnoti');
 		}, 3000);
 		chrome.notifications.onButtonClicked.addListener(function(notifId, btnIdx) {
-			if (notifId === myNotificationID) {
-				if (btnIdx === 0) {
-					chrome.tabs.create({url: 'chrome://extensions/?options=' + chrome.runtime.id});
-				} else if (btnIdx === 1) {
-					//alert("button2");
-				}
-			}
+			if (chrome.runtime.openOptionsPage) {
+				// New way to open options pages, if supported (Chrome 42+).
+				chrome.runtime.openOptionsPage();
+			  } else {
+				// Reasonable fallback.
+				window.open(chrome.runtime.getURL('options.html'));
+			  }
 		});
 	});
 	
@@ -165,7 +166,7 @@ chrome.alarms.onAlarm.addListener(function( alarm ) {
     chrome.tabs.create({'url': "http://km2.timetrak.com:85/web.exe?sp2application=079950102ClocTrak", active: false, selected: false,  }, function(tab){ 
 				tabID = tab.id;
 		});
-		chrome.tabs.onUpdated.addListener(function(tabID, info, tab) {
+		/* chrome.tabs.onUpdated.addListener(function(tabID, info, tab) {
 				chrome.tabs.executeScript(tab.id, { file: 'src/options_custom/jquery-1.11.1.min.js', runAt : 'document_start' }, function(tab) {
 					chrome.tabs.executeScript(tabID, { 
 						file : 'src/inject/inject.js',
@@ -173,7 +174,7 @@ chrome.alarms.onAlarm.addListener(function( alarm ) {
 					});
 
 				});
-			});
+			}); */
 							
 							
 			//Lets send the smash data from the matching array to the inject.js script
@@ -223,7 +224,7 @@ chrome.alarms.onAlarm.addListener(function( alarm ) {
 				
 			var time = moment(json[i].time).toJSON();
 			time = moment(time).add(1, 'days').valueOf();
-			json[i].time = moment(time).toJSON();
+			json[i].time = moment(time).valueOf();
 			localStorage.setItem('dataSet', JSON.stringify(json));
 			
 			alarmcounter++;
