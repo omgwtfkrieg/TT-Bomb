@@ -4,7 +4,8 @@
 		setdataSet = [];
 		localStorage.setItem('dataSet', JSON.stringify(setdataSet));
 	}
-
+var timefortomorrow;
+var fortomocounter;
 var messages = [
 			"Life is too short to remove USB safely",
 			"If we're not meant to have midnight snacks, why is there a light in the fridge?",
@@ -49,12 +50,17 @@ var messages = [
 		}
 
 
+		var randomMinutes = (function() {
+			return Math.floor(Math.random() * 50+1);
+		})();
+		//console.log("randomMinutes: " + randomMinutes);
+
 var currenttime;
 
 ////////////////////////////////////////
 // Alarm
 ////////////////////////////////////////
-var randomminute = Math.floor(Math.random() * 50+1).toString() ;
+//var randomminute = Math.floor(Math.random() * 50+1).toString() ;
 var json = JSON.parse(localStorage.getItem("dataSet"));
 function createAlarm() {
 	json = JSON.parse(localStorage.getItem("dataSet"));
@@ -72,8 +78,8 @@ function createAlarm() {
 		var currentime = moment();
 		var timestamp = moment(time).valueOf();
 		timestamp = Number(timestamp);
-		console.log(randomminute);
-		console.log("Timestamp before: " + moment(timestamp).format("dddd, MMMM Do YYYY, h:mm:ss a"));
+		//console.log(randomMinutes);
+		//console.log("Timestamp before: " + moment(timestamp).format("dddd, MMMM Do YYYY, h:mm:ss a"));
 
 		var checkifbefore = moment(time).isBefore(currentime);
 
@@ -86,12 +92,13 @@ function createAlarm() {
 		if (checkifbefore){
 
 			timestamp = moment(timestamp).add(1, 'days').valueOf();
-			console.log("randomminute inside if: " + randomminute);
+			console.log("randomminute inside if: " + randomMinutes);
 			console.log("timestamp after adding a day: " + moment(timestamp).format("dddd, MMMM Do YYYY, h:mm:ss a"));
-			timestamp = moment(timestamp).minutes(randomminute);
+			//timestamp = moment(timestamp).minute('randomMinutes');
 			console.log("timestamp after adding a minutes: " + moment(timestamp).format("dddd, MMMM Do YYYY, h:mm:ss a"));
 			json[i].time = moment(timestamp);
 			localStorage.setItem('dataSet', JSON.stringify(json));
+
 		};
 
 		//Generates random number from 1-10
@@ -171,7 +178,7 @@ chrome.alarms.onAlarm.addListener(function( alarm ) {
 	}, 3000);
 
 
-  function createtab() {
+  var createtab = function () {
     chrome.tabs.create({'url': "http://km2.timetrak.com:85/web.exe?sp2application=079950102ClocTrak", active: false, selected: false,  }, function(tab){
 				tabID = tab.id;
 		});
@@ -209,15 +216,18 @@ chrome.alarms.onAlarm.addListener(function( alarm ) {
 					console.log("Received: 'Smash Accepted' - Punch Success");
 				}else if (request.didthis == "Close Tab - Session Terminated"){
 					console.log("Received: 'Session Terminated' - closing tab");
+					setfornextday();
 					chrome.tabs.remove(tabID);
 					chrome.runtime.reload();
 				}else if (request.didthis == "Close Tab - HAVE A NICE DAY"){
 					console.log("Received: 'HAVE A NICE DAY' - closing tab");
+					setfornextday();
 					chrome.tabs.remove(tabID);
 					chrome.runtime.reload();
 				}
 				else if (request.didthis == "Close Tab - Cancelled"){
 					console.log("Received: 'Cancelled' - closing tab");
+					setfornextday();
 					chrome.tabs.remove(tabID);
 					chrome.runtime.reload();
 				}
@@ -225,6 +235,9 @@ chrome.alarms.onAlarm.addListener(function( alarm ) {
 			});
 
   }
+
+
+
 	//will go through all the data array in the json file
 	for (i=0;i<json.length;i++){
 		var alarmcounter = 0;
@@ -232,7 +245,10 @@ chrome.alarms.onAlarm.addListener(function( alarm ) {
 		if (json[i].uuid === alarm.name){ //will stop and grab all data from the array that matches the time
 			counter = i;
 			createtab();
-
+			window.time = moment(json[i].time);
+			window.counter = counter;
+			//createtab();
+			//setfornextday();
 			//listens to the tab recently created by ID and makes sure to add the inject.js
 			//including the jquery library every time it changes/updates etc...
 
@@ -240,15 +256,25 @@ chrome.alarms.onAlarm.addListener(function( alarm ) {
 			// Places the same smash for the next day once it is executed.
 			//////////////////////////////////////////////////////////////
 
-			var time = moment(json[i].time).toJSON();
-			time = moment(time).add(1, 'days').minutes(randomminute).valueOf();
-
-			json[i].time = moment(time).valueOf();
-			localStorage.setItem('dataSet', JSON.stringify(json));
-
 			alarmcounter++;
-
 		}
+
+	}
+
+	var setfornextday = function() {
+
+		var json = JSON.parse(localStorage.getItem("dataSet"));
+		var timeclone = window.time.clone();
+		console.log("randomMinutes: " + randomMinutes);
+		timeclone = timeclone.add(1, 'd').minutes(randomMinutes);
+		console.log("time clone value: " + moment(timeclone).format("YYYY-MM-DD HH:mm"));
+		//time.add(1, 'd');
+		//console.log(moment(time).format("YYYY-MM-DD HH:mm"));
+
+		console.log(json[counter].time);
+		console.log("counter: " + counter);
+		json[window.counter].time = timeclone.valueOf();
+		localStorage.setItem('dataSet', JSON.stringify(json));
 
 	}
 
@@ -292,3 +318,4 @@ chrome.runtime.onConnect.addListener(function(port) {
 	}
 
 });
+console.log("global window.time: " + window.time);
