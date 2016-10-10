@@ -1,6 +1,6 @@
 {
   "name": "π-BOMB : App built for nothing.",
-  "version": "1.0.11",
+  "version": "1.0.12",
   "manifest_version": 2,
   "description": "The automation of your nothingness.",
   "homepage_url": "http://trololololololololololo.com/",
@@ -20,20 +20,20 @@
   },
 
  "options_ui": {
-  
+
     "page": "src/options_custom/index.html",
-   
+
     "chrome_style": false
- 
+
   },
-  
+
   "content_scripts": [
     {
       "matches": ["http://km2.timetrak.com:85/*"],
       "js": ["src/options_custom/jquery-1.11.1.min.js","src/js/moment.js","src/inject/inject.js"]
     }
   ],
-  
+
   "permissions": [
 	"background",
     "notifications",
