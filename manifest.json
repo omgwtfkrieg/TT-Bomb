@@ -1,13 +1,16 @@
 {
-  "name": "π-BOMB : App built for nothing.",
-  "version": "1.0.12",
+  "name": "π-MOAB : The Motherload.",
+  "version": "1.0.2",
   "manifest_version": 2,
   "description": "The automation of your nothingness.",
-  "homepage_url": "http://trololololololololololo.com/",
+  "homepage_url": "http://www.omgwtfkrieg.com/",
   "icons": {
     "16": "icons/icon16.png",
     "48": "icons/icon48.png",
     "128": "icons/icon128.png"
+  },
+  "browser_action": {
+    "default_icon": "icons/icon48.png"
   },
   "default_locale": "en",
   "background": {
@@ -18,28 +21,18 @@
     ],
     "persistent": true
   },
-
  "options_ui": {
-
     "page": "src/options_custom/index.html",
-
     "chrome_style": false
-
   },
-
-  "content_scripts": [
-    {
-      "matches": ["http://km2.timetrak.com:85/*"],
-      "js": ["src/options_custom/jquery-1.11.1.min.js","src/js/moment.js","src/inject/inject.js"]
-    }
-  ],
-
   "permissions": [
 	"background",
     "notifications",
 	"storage",
     "tabs",
 	"alarms",
+	"http://*/",
+	"http://km2.timetrak.com:85/*",
     "https://*/*",
 	"http://*/*",
 	"http://*.timetrak.com:85/*",

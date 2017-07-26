@@ -17,6 +17,10 @@
 	<!-- Custom JS -->
 	<style type="text/css">
 	
+	body, html {
+height: 0 !important;
+min-height: 0 !important;
+}
     .spin {
 		-webkit-animation: spin .5s infinite linear;
 		-moz-animation: spin .5s infinite linear;
@@ -91,14 +95,11 @@
 	}		
 
   body {
-    display: flex;
-    min-height: 542px;
-    flex-direction: column;
 	min-width: 768px;
   }
 
   main {
-    flex: 1 0 auto;
+    <!-- flex: 1 0 auto; -->
   }
   .card {
   overflow: visible;
@@ -143,6 +144,8 @@
    .text-primary {
 	  color: #e91e63;
 	}
+	nav {background-image: url("wood.jpg");}
+	body {background-image: url("tp.jpg");min-height:100px; }
   </style>
 	<script src="./jquery-1.11.1.min.js" type="text/javascript"></script>
 	<script src="./js/materialize.min.js" type="text/javascript"></script>
@@ -153,86 +156,80 @@
 
   </head>
 
-  <body id="options-page" class="grey lighten-5">
+  <body id="options-page" style="background-color:#BBDEFB;" >
 
-	<header class="white-text blue darken-3">
-		<div class="col s12 center-align">
-			<div><h5 class="white-text header">Options</h5></div>
-		</div>
-
-		<div class="fixed-action-btn click-to-toggle" >
-			<a class="btn-floating btn-large red darken-1">
-				<i class="large material-icons">tune</i>
-			</a>
-			<ul>
-				<li><a class="btn-floating teal tooltipped" id="addnothing" data-position="top" data-delay="50" data-tooltip="Add Smashes™"><i class="material-icons"><i class="material-icons">alarm_add</i></i></a></li>
-				<li><a class="btn-floating purple tooltipped removealarms" data-position="top" data-delay="50" data-tooltip="Stop Smashes™"><i class="material-icons">stop</i></a></li>
-				<li><a class="btn-floating green tooltipped addalarms" data-position="top" data-delay="50" data-tooltip="Start Smashes™"><i class="material-icons">play_arrow</i></a></li>
-				<li><a class="btn-floating blue tooltipped reloadext" data-position="top" data-delay="50" data-tooltip="Reload App"><i class="material-icons">refresh</i></a></li>
-			</ul>
-		</div>
-
-		<div class="divider"></div>
-	</header>
-	<main class="container">
-	<div class="">
-			<div class="card addnothing grey lighten-5">
-				<div class="card-content white-text blue darken-1">
-					<span class="card-title">Add Smash&#8482;</span>
-				</div>			
-				<div class="card-action white">
-					<div id = "alert_placeholder"></div>
-					<form id="addsmashinqueue">
-						<div class="row" id="addsmashes">
-							<div class="input-field col s2">
-								<input placeholder="40000" name="smashID" id="smashID" type="text" class="validate" maxlength="5" length="5">
-								<label>Smash ID</label>
-							</div>
-							<div class="input-field col s2 clockpicker">
-								<input placeholder="00:00" value="" id="timepicker" type="text" class="validate">
-								<label class="active">Schedule</label>
-							</div>
-							<div class="input-field col s4">
-								<select multiple id="multipleSelect">
-									<option value="1">Monday</option>
-									<option value="2">Tuesday</option>
-									<option value="3">Wednesday</option>
-									<option value="4">Thursday</option>
-									<option value="5">Friday</option>
-									<option value="6">Saturday</option>
-									<option value="7">Sunday</option>
-								</select>
-								<label>Day(s)</label>
-							 </div>
-							<div class="input-field col s4">
-								<select id="smashType">
-									<option value="FN1">In for the day</option>
-									<option value="FN2">Back from lunch</option>
-									<option value="FN3">Out</option>
-									<option value="FN5">End of the day</option>
-								</select>
-								<label>Choose your option</label>
-							</div>
-						</div>
-					</form>
-					<div class="center-align">
-						<button href="#" class="waves-effect waves-light btn red" id="addnothingclose">Cancel</button>
-						<button href="#" class="waves-effect waves-light btn green" id="Save" name="Save" disabled>Save</button>
-					</div>
-				</div>
-			 </div>
+	<header class="white-text" background="wood.jpg;">
+		<nav>
+			<div class="nav-wrapper">
+				<ul class="right">
+					<li><a class="tooltipped removealarms" data-position="bottom" data-delay="50" data-tooltip="Stop Smashes™"><i class="material-icons">stop</i></a></li>
+					<li><a class="tooltipped addalarms" data-position="bottom" data-delay="50" data-tooltip="Start Smashes™"><i class="material-icons">play_arrow</i></a></li>
+					<li><a class="tooltipped reloadext" data-position="bottom" data-delay="50" data-tooltip="Reload App"><i class="material-icons">refresh</i></a></li>
+				</ul>
+			</div>
+		 </nav>
 
 	
-		<div class="card blue darken-1">
-			<div class="card-content white-text">
+	</header>
+	<main class="">
+		<div class="card addnothing grey lighten-5">
+			<div class="card-image white-text">
+				<img height="84" width="600" src="wood.jpg">
+				<span class="card-title">Add Smash&#8482;</span>
+			</div>			
+			<div class="card-action white">
+				<div id = "alert_placeholder"></div>
+				<form id="addsmashinqueue">
+					<div class="row" id="addsmashes">
+						<div class="input-field col s2">
+							<input placeholder="40000" name="smashID" id="smashID" type="text" class="validate" maxlength="5" length="5">
+							<label>Smash ID</label>
+						</div>
+						<div class="input-field col s2 clockpicker">
+								<input placeholder="00:00" value="" id="timepicker" type="text" class="validate">
+								<label class="active">Schedule</label>
+						</div>
+						<div class="input-field col s4">
+							<select multiple id="multipleSelect">
+								<option value="1">Monday</option>
+								<option value="2">Tuesday</option>
+								<option value="3">Wednesday</option>
+								<option value="4">Thursday</option>
+								<option value="5">Friday</option>
+								<option value="6">Saturday</option>
+								<option value="7">Sunday</option>
+							</select>
+							<label>Day(s)</label>
+						</div>
+						<div class="input-field col s4">
+							<select id="smashType">
+								<option value="FN1">IN FOR DAY</option>
+								<option value="FN2">BACK FROM LUNCH</option>
+								<option value="FN3">OUT</option>
+								<option value="FN5">END OF DAY</option>
+							</select>
+							<label>Choose your option</label>
+						</div>
+					</div>
+				</form>
+				<div class="center-align">
+					<button href="#" class="waves-effect waves-light btn" style="background-color: #FF4081" id="addnothingclose">Cancel</button>
+					<button href="#" class="waves-effect waves-light btn green" id="Save" name="Save" disabled>Save</button>
+				</div>
+			</div>
+		</div>
+		
+		<div class="card">
+			<div class="card-image">
+				<img height="84" width="600" src="wood.jpg">
 				<span class="card-title">Smashes&#8482;</span>
-            </div>
-            <div class="card-action white grey-text text-darken-1">
+				<a class="btn-floating halfway-fab waves-effect waves-light pulse" style="background-color: #03A9F4"" id="addnothing"><i class="material-icons">alarm_add</i></a>
+			</div>
+			<div class="card-content">
 				<table id="myTable" class="table" cellspacing="0" width="100%"></table>
-            </div>
-        </div>
-	</div>
-</div> 
-</main> 
+			</div>
+		</div>
+
+	</main> 
 
 </body></html>

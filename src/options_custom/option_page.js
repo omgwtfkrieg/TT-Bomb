@@ -1,4 +1,14 @@
 $(function() {
+	
+	// window.onload = function() {
+		// var htmlStyle = document.querySelector('html').style;
+		// chrome.windows.getCurrent(function(currentWindow) {
+			// htmlStyle.height = (currentWindow.height*.9) + 'px';
+			//htmlStyle.width = (currentWindow.width*.9) + 'px';
+			// console.log(htmlStyle.height, htmlStyle.width);
+		// });
+	// };
+	
 	$(document).ready(function(){
 		$('.tooltipped').tooltip({delay: 50});
 	});
@@ -59,7 +69,6 @@ $(function() {
 			{ "sTitle": "Value", "mData": "smash", "sClass": "hide center-align"  },
 			{ "sTitle": "Time", "mData": "time", "sClass": "center-align" },
 			{ "sTitle": "Day", "mData": "day", "sClass": "center-align" },
-			{ "sTitle": "Status", "mData": "status", "sClass": "center-align" },
 			{ "sTitle": "Remove", "mData": "button", "sClass": "center-align" },
 
         ],
@@ -134,7 +143,6 @@ $(function() {
 				smash : $('#smashType').val(),
 				time : momentnow,
 				day : newValuesArr,
-				status: "no",
 				button: "deleteme",
 
 		};
@@ -154,8 +162,8 @@ $(function() {
 				$('#Save').prop("disabled", true);
 				$('.addnothing').fadeToggle( "fast", "linear" );
 		}
-	port.postMessage({answer: "Create Alarms"});
-	return false;
+		port.postMessage({answer: "Create Alarms"});
+		return false;
 	});
 
 	$(document).on('click', '.delete', function () {

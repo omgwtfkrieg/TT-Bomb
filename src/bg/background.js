@@ -1,9 +1,10 @@
 //Show page action icon in omnibar if it matches the URL specified
 //Checks if dataSet key exists if not it creates it
-	if (localStorage.getItem("dataSet") === null) {
-		setdataSet = [];
-		localStorage.setItem('dataSet', JSON.stringify(setdataSet));
-	}
+if (localStorage.getItem("dataSet") === null) {
+	setdataSet = [];
+	localStorage.setItem('dataSet', JSON.stringify(setdataSet));
+}
+
 var timefortomorrow;
 var fortomocounter;
 var messages = [
@@ -43,19 +44,26 @@ var messages = [
 			"If God made everything, then God must be Chinese?",
 			"Some people are like Slinky's. Pretty much useless but make you smile when you push them down the stairs. :)",
 			"Never argue with an idiot they'll drag you down to their level and beat you through experience"
-			];
+];
 
-		function getMessages() {
-			return messages[Math.floor(Math.random() * messages.length)];
-		}
+function getMessages() {
+	return messages[Math.floor(Math.random() * messages.length)];
+}
+chrome.browserAction.onClicked.addListener(function() {
+    chrome.browserAction.setPopup({
+        popup: 'src/options_custom/index.html'
+    });
+});
 
-
-		var randomMinutes = (function() {
-			return Math.floor(Math.random() * 50+1);
-		})();
-		//console.log("randomMinutes: " + randomMinutes);
+var randomMinutes = (function() {
+	return Math.floor(Math.random() * 50+1);
+})();
+//console.log("randomMinutes: " + randomMinutes);
 
 var currenttime;
+var targetPID="";
+var targetPI2="";
+var sp2pageID="";
 
 ////////////////////////////////////////
 // Alarm
@@ -63,30 +71,20 @@ var currenttime;
 //var randomminute = Math.floor(Math.random() * 50+1).toString() ;
 var json = JSON.parse(localStorage.getItem("dataSet"));
 function createAlarm() {
+	
 	json = JSON.parse(localStorage.getItem("dataSet"));
-
 	chrome.alarms.clearAll();
 	var alarmcounter = 0;
 
 	//will go through all the data array in the json file
 	for (i=0;i<json.length;i++){
 
-
 		var time = moment(json[i].time).valueOf();
-		//console.log(randomminute);
-		//console.log(time);
 		var currentime = moment();
 		var timestamp = moment(time).valueOf();
 		timestamp = Number(timestamp);
-		//console.log(randomMinutes);
-		//console.log("Timestamp before: " + moment(timestamp).format("dddd, MMMM Do YYYY, h:mm:ss a"));
 
 		var checkifbefore = moment(time).isBefore(currentime);
-
-		//console.log("raw time: " + time);
-		//console.log("timestamp: " + timestamp);
-		//console.log("time + random: " + randomtimestamp);
-
 
 		//checks if the date stored was scheduled before the current local time. If it is, it will schedule the alarm for the next day.
 		if (checkifbefore){
@@ -99,15 +97,9 @@ function createAlarm() {
 			json[i].time = moment(timestamp);
 			localStorage.setItem('dataSet', JSON.stringify(json));
 
+
 		};
 
-		//Generates random number from 1-10
-
-		//console.log("random number: " + random);
-
-		//converts object to string
-		//timestamp = parseInt(timestamp);
-		//console.log("timestamp: " + timestamp);
 		// Creates Alarm and assigns a timestamp
 		chrome.alarms.create(json[i].uuid, {
 			when: timestamp
@@ -158,13 +150,14 @@ function createAlarm() {
 }
 //End of createAlarm
 
+
 createAlarm(); // Initializes function on app load
 
 chrome.alarms.onAlarm.addListener(function( alarm ) {
 
 	chrome.notifications.create('inismash',{
 			type:'basic',
-			title:'Running a scheduled smash.',
+			title:'Started smashing.',
 			iconUrl: 'icons/icon128.png',
 			message: getMessages(),
 			expandedMessage:'Hello thanks for using our app',
@@ -176,105 +169,289 @@ chrome.alarms.onAlarm.addListener(function( alarm ) {
 	setTimeout(function(){
 		chrome.notifications.clear('inismash');
 	}, 3000);
+	
+	var setfornextday = function() {
+		var json = JSON.parse(localStorage.getItem("dataSet"));
+		for (i=0;i<json.length;i++){
+			var alarmcounter = 0;
+			//goes through all the smashes in localstorage and compares it with the alarm in queue, if one UUID matches with the alarm it grabs all the data
+			if (json[i].uuid === alarm.name){ //will stop and grab all data from the array that matches the time
+				counter = i;
+				//createtab();
+				sfndtime = moment(json[i].time);
+				//sfndcounter = counter;
+				
+				var timeclone = sfndtime.clone();
+				console.log("randomMinutes: " + randomMinutes);
+				timeclone = timeclone.add(1, 'd').minutes(randomMinutes);
+				console.log("time clone value: " + moment(timeclone).format("YYYY-MM-DD HH:mm"));
+				//time.add(1, 'd');
+				//console.log(moment(time).format("YYYY-MM-DD HH:mm"));
 
+				console.log(json[counter].time);
+				console.log("counter: " + counter);
+				json[counter].time = timeclone.valueOf();
+				localStorage.setItem('dataSet', JSON.stringify(json));
+				//createtab();
+				//setfornextday();
+				//listens to the tab recently created by ID and makes sure to add the inject.js
+				//including the jquery library every time it changes/updates etc...
 
-  var createtab = function () {
-    chrome.tabs.create({'url': "http://km2.timetrak.com:85/web.exe?sp2application=079950102ClocTrak", active: false, selected: false,  }, function(tab){
-				tabID = tab.id;
-		});
-		/* chrome.tabs.onUpdated.addListener(function(tabID, info, tab) {
-				chrome.tabs.executeScript(tab.id, { file: 'src/options_custom/jquery-1.11.1.min.js', runAt : 'document_start' }, function(tab) {
-					chrome.tabs.executeScript(tabID, {
-						file : 'src/inject/inject.js',
-						runAt : 'document_start'
-					});
+				//////////////////////////////////////////////////////////////
+				// Places the same smash for the next day once it is executed.
+				//////////////////////////////////////////////////////////////
 
-				});
-			}); */
+				alarmcounter++;
+			}
 
+		}
 
-			//Lets send the smash data from the matching array to the inject.js script
-			chrome.extension.onMessage.addListener(function(request, sender, sendResponse) {
-				if (request.method == 'getsmashdata') {
-					var objectsmashIDString = json[counter].smashID;
-					var objectsmashString = json[counter].smash;
-					var objectstatusString = json[counter].status;
-					var objecttimeString = json[counter].time;
-					sendResponse({data1: objectsmashIDString, data2: objectsmashString, data3: objectstatusString, data4: objecttimeString});
-
-
-
-
-				} else {
-					sendResponse({}); // snub them.
-				}
-
-				if (request.pagestate == "PageReady"){
-					console.log("Received: 'Selecting Punch Type'");
-					sendResponse({dothis: "Selecting type of smash"});
-				}else if (request.didthis == "Smash Accepted"){
-					console.log("Received: 'Smash Accepted' - Punch Success");
-				}else if (request.didthis == "Close Tab - Session Terminated"){
-					console.log("Received: 'Session Terminated' - closing tab");
-					setfornextday();
-					chrome.tabs.remove(tabID);
-					chrome.runtime.reload();
-				}else if (request.didthis == "Close Tab - HAVE A NICE DAY"){
-					console.log("Received: 'HAVE A NICE DAY' - closing tab");
-					setfornextday();
-					chrome.tabs.remove(tabID);
-					chrome.runtime.reload();
-				}
-				else if (request.didthis == "Close Tab - Cancelled"){
-					console.log("Received: 'Cancelled' - closing tab");
-					setfornextday();
-					chrome.tabs.remove(tabID);
-					chrome.runtime.reload();
-				}
-
-			});
-
-  }
-
-
-
-	//will go through all the data array in the json file
+	}
+	
+	
+		//will go through all the data array in the json file
 	for (i=0;i<json.length;i++){
 		var alarmcounter = 0;
 		//goes through all the smashes in localstorage and compares it with the alarm in queue, if one UUID matches with the alarm it grabs all the data
 		if (json[i].uuid === alarm.name){ //will stop and grab all data from the array that matches the time
 			counter = i;
-			createtab();
-			window.time = moment(json[i].time);
-			window.counter = counter;
-			//createtab();
-			//setfornextday();
-			//listens to the tab recently created by ID and makes sure to add the inject.js
-			//including the jquery library every time it changes/updates etc...
+			
+			var currentime = moment();
+			var time = json[counter].time;
+			var time_hour = moment(time).hour();
+			var time_minute = moment(time).minute();
+			var time_day = json[counter].day;
+			var now = moment();
+			var now_hour = moment().hour();
+			var now_minute = moment().minute();
+			var now_day = moment().day();
+			now_day = parseInt(now_day)
+				console.log(now_day);
+			var result;
+			for( var i = 0, len = time_day.length; i < len; i++ ) {
+				var timestored = time_day[i][0];
+				console.log("Do you see me? "+timestored);
+					if( timestored == now_day ) {
+						result = time_day[i];
+						console.log("it matches: " + now_day + " = " + time_day[i])
+						
+								if ( time_hour == now_hour && time_minute == now_minute){
+						fetch('http://km2.timetrak.com:85/web.exe?sp2application=079950102ClocTrak',{
+							method: 'GET',
+							credentials: 'include'
+						})  
+						.then(
+								function(response) {
+										return response.text();
+								}
+						)
+						.then(function(text) {
+							// <!DOCTYPE ....
 
+							console.log("Retrieving hidden values...");
+							targetPID = $(text).find("input[name=targetPID]").val();
+							targetPI2 = $(text).find("input[name=targetPI2]").val();
+							sp2pageID = $(text).find("input[name=sp2pageID]").val();
+							console.log("Hidden values Found!");
+							
+							//var bodyformdata1 = 'targetPID='+targetPID+'&targetPI2='+targetPI2+'&sp2pageID='+sp2pageID+'&'+json[counter].smash+'='+json[counter].smashType+'&sp2focus=FN1&submitdone=done&sp2menu=0&sp2form=CTRAK&sp2control=+';
+							
+							var bodyformdata1 = json[counter].smash+'='+json[counter].smashType+'&sp2control=+&sp2focus=FN1&sp2form=CTRAK&sp2menu=0&sp2pageID='+sp2pageID+'&submitdone=done&targetPI2='+targetPI2+'&targetPID='+targetPID;
+							
+							console.log(bodyformdata1);
+
+										
+							fetch('http://km2.timetrak.com:85/web.exe', {
+								method: 'POST',
+								credentials: 'include',
+								headers: {
+											'origin': 'http://km2.timetrak.com:85',
+											'upgrade-insecure-requests': '1',
+											'user-agent': 'Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/57.0.2987.133 Safari/537.36',
+											'accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
+											'dnt': '1',
+											'referer': 'http://km2.timetrak.com:85/web.exe?sp2application=079950102ClocTrak',
+											'accept-encoding': 'gzip, deflate',
+											'accept-language': 'en-US,es-HN;q=0.8,es;q=0.6,en;q=0.4',
+											'content-type': 'application/x-www-form-urlencoded',
+											'postman-token': '5d92c137-6460-ad3d-1f3e-0574b07235f8'	
+								},
+									body: bodyformdata1
+							})
+							.then(
+								function(response) {
+									return response.text();
+								}
+							)
+							.then(function(text) {
+								//console.log(text);
+								
+								//var bodyformdata2 = 'MSG4='+json[counter].smashID+'&OK=Ok&sp2control=+&sp2focus=MSG4&sp2form=CTRAK&sp2menu=0&sp2pageID='+sp2pageID+'&submitdone=done&targetPI2='+targetPI2+'&targetPID='+targetPID;
+								
+								var bodyformdata2 = 'MSG4='+json[counter].smashID+'&OK=Ok&sp2control=+&sp2focus=MSG4&sp2form=CTRAK&sp2menu=0&sp2pageID='+sp2pageID+'&submitdone=done&targetPI2='+targetPI2+'&targetPID='+targetPID;
+										
+								var formData = new URLSearchParams();
+										
+								formData.append('MSG4',json[counter].smashID);
+								formData.append('OK','OK');
+								formData.append('sp2control',' ');
+								formData.append('sp2focus','MSG4');
+								formData.append('sp2form','CTRAK');
+								formData.append('sp2menu','0');
+								formData.append('submitdone','done');
+								formData.append('targetPI2',targetPI2);
+								formData.append('targetPID',targetPID);
+										
+
+								console.log(bodyformdata2);				
+									
+								fetch('http://km2.timetrak.com:85/web.exe', {
+									method: 'POST',
+									credentials: 'include',
+									headers: {
+										'origin': 'http://km2.timetrak.com:85',
+										'upgrade-insecure-requests': '1',
+										'user-agent': 'Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/57.0.2987.133 Safari/537.36',
+										'accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
+										'dnt': '1',
+										'referer': 'http://km2.timetrak.com:85/web.exe?sp2application=079950102ClocTrak',
+										'accept-encoding': 'gzip, deflate',
+										'accept-language': 'en-US,es-HN;q=0.8,es;q=0.6,en;q=0.4',
+										'content-type': 'application/x-www-form-urlencoded',
+										'postman-token': '5d92c137-6460-ad3d-1f3e-0574b07235f8'	
+									},
+									body: formData
+
+								})
+								.then(
+									function(response) {
+										return response.text();
+									}
+								)
+								.then(function(text) {
+									//console.log(text);
+
+									//var bodyformdata3 = 'sp2control=+&sp2focus=FN1&sp2form=CTRAK&sp2menu=9000&sp2pageID='+sp2pageID+'&submitdone=done&targetPI2='+targetPI2+'&targetPID='+targetPID;
+									
+									var bodyformdata3 = 'sp2control=+&sp2focus='+json[counter].smash+'&sp2form=CTRAK&sp2menu=+9000&sp2pageID='+sp2pageID+'&submitdone=done&targetPI2='+targetPI2+'&targetPID='+targetPID;
+							
+									fetch('http://km2.timetrak.com:85/web.exe', {
+										method: 'POST',
+										credentials: 'include',
+										headers: {
+											'origin': 'http://km2.timetrak.com:85',
+											'upgrade-insecure-requests': '1',
+											'user-agent': 'Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/57.0.2987.133 Safari/537.36',
+											'content-type': 'application/x-www-form-urlencoded',
+											'accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
+											'dnt': '1',
+											'referer': 'http://km2.timetrak.com:85/web.exe',
+											'accept-encoding': 'gzip, deflate',
+											'accept-language': 'en-US,es-HN;q=0.8,es;q=0.6,en;q=0.4',
+											'postman-token': '87064d09-89f8-a2d0-5017-8db9404ec6c8'
+										},
+										body: bodyformdata3
+
+									})
+									.then(
+										function(response) {
+											return response.text();
+										}
+									)
+									.then(function(text) {
+										//console.log(text);
+
+										var bodyformdata4 = 'sp2control=&sp2focus=&sp2form=&sp2menu=&sp2pageID=&submitdone=&targetPI2=&targetPID=';	
+													
+										fetch('http://km2.timetrak.com:85/web.exe', {
+											method: 'POST',
+											credentials: 'include',
+											headers: {
+												'origin': 'http://km2.timetrak.com:85',
+												'upgrade-insecure-requests': '1',
+												'user-agent': 'Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/57.0.2987.133 Safari/537.36',
+												'content-type': 'application/x-www-form-urlencoded',
+												'accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
+												'dnt': '1',
+												'referer': 'http://km2.timetrak.com:85/web.exe',
+												'accept-encoding': 'gzip, deflate',
+												'accept-language': 'en-US,es-HN;q=0.8,es;q=0.6,en;q=0.4',
+												'postman-token': '87064d09-89f8-a2d0-5017-8db9404ec6c8'
+										},
+										body: bodyformdata4
+
+										})
+										.then(
+											function(response) {
+												return response.text();
+											}
+										)
+										.then(function(text) {
+											//console.log(text);
+											console.log('TT-5 completed');
+										})
+										.catch(function(err) { 
+											console.log('Fetch Error :-S', err);  
+															
+										})
+
+											
+									})
+									.catch(function(err) {
+										console.log('Fetch Error :-S', err);  
+													
+									})
+
+									console.log('Everything was completed Successfully');
+									setfornextday();
+									chrome.runtime.reload();
+									
+									chrome.notifications.create('endedsmash',{
+										type:'basic',
+										title:'Finish smashing',
+										iconUrl: 'icons/icon128.png',
+										message: getMessages(),
+										expandedMessage:'Hello thanks for using our app',
+										priority:1,
+									},function(id) {
+										myNotificationID = id;
+									});
+
+									setTimeout(function(){
+										chrome.notifications.clear('endedsmash');
+									}, 3000);										
+												
+								})
+								.catch(function(err) {
+									console.log('Fetch Error :-S', err); 
+
+								})
+							})
+							.catch(function(err) {
+								console.log('Fetch Error :-S', err);  
+							 });
+							console.log('second method completed');
+							
+						})
+						.catch(function(err) {
+							console.log('Fetch Error :-S', err);  
+						});
+						console.log('first method completed');
+
+					}
+					
+					break;
+				}
+			}
+			
+			//window.time = moment(json[i].time);
+			//window.counter = counter;
 			//////////////////////////////////////////////////////////////
 			// Places the same smash for the next day once it is executed.
 			//////////////////////////////////////////////////////////////
 
 			alarmcounter++;
-		}
-
-	}
-
-	var setfornextday = function() {
-
-		var json = JSON.parse(localStorage.getItem("dataSet"));
-		var timeclone = window.time.clone();
-		console.log("randomMinutes: " + randomMinutes);
-		timeclone = timeclone.add(1, 'd').minutes(randomMinutes);
-		console.log("time clone value: " + moment(timeclone).format("YYYY-MM-DD HH:mm"));
-		//time.add(1, 'd');
-		//console.log(moment(time).format("YYYY-MM-DD HH:mm"));
-
-		console.log(json[counter].time);
-		console.log("counter: " + counter);
-		json[window.counter].time = timeclone.valueOf();
-		localStorage.setItem('dataSet', JSON.stringify(json));
+		}else{setfornextday(); chrome.runtime.reload();}
 
 	}
 
@@ -318,4 +495,3 @@ chrome.runtime.onConnect.addListener(function(port) {
 	}
 
 });
-console.log("global window.time: " + window.time);
